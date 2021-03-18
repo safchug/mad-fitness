@@ -9,8 +9,7 @@ import {
 } from 'typeorm';
 import { UsersEntity } from '../../users/entity/users.entity';
 
-Entity();
-
+@Entity()
 export class RefreshTokensEntity {
   @PrimaryGeneratedColumn()
   id: number;
