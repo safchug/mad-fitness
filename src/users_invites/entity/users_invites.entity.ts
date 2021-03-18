@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDa
 import { UsersEntity } from '../../users/entity/users.entity';
 import { InvitesEntity } from '../../invites/entity/invites.entity'
 
-Entity()
+@Entity()
 export class UsersInvitesEntity {
     @PrimaryGeneratedColumn()
     id: number;
