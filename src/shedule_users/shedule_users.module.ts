@@ -1,4 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SheduleUsersEntity } from './entity/shedule_users.entity';
 
-@Module({})
+@Module({
+    imports: [TypeOrmModule.forFeature([SheduleUsersEntity])]
+})
 export class SheduleUsersModule {}
