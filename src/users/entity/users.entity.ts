@@ -23,7 +23,7 @@ export class UsersEntity {
     @Column({ type: 'varchar', length: 100 })
     fullname: string;
 
-    @Column({ type: 'boolean'})
+    @Column({ type: 'boolean', default: false })
     active: boolean;
 
     @CreateDateColumn({type: "timestamp", name: "created_at", default: () => "CURRENT_TIMESTAMP(6)"})
