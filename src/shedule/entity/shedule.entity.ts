@@ -1,17 +1,24 @@
-import { Column, CreateDateColumn, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import User from '';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn, ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from "typeorm";
+import UserEntity from '../../users/entity/users.entity';
 import ClassEntity from "../../classes/entity/class.entity";
 
+@Entity({name: 'shedule_entity'})
 class SheduleEntity {
   @PrimaryGeneratedColumn({name: 'id'})
   id: number;
 
-  @OneToOne(() => User, user => user.id)
-  @JoinColumn()
-  trener: User;
+  @ManyToOne(() => UserEntity, userEntity => userEntity.id)
+  trener: UserEntity;
 
-  @OneToOne(() => ClassEntity, classEntity => classEntity.id)
-  @JoinColumn()
+  @ManyToOne(() => ClassEntity, classEntity => classEntity.id)
   class: ClassEntity;
 
   @Column({name: 'description'})
