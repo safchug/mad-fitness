@@ -5,8 +5,8 @@ import { RefreshTokensEntity } from './entity/refresh-tokens.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RefreshTokensEntity])],
-  controllers: [RefreshTokensController],
-  providers: [RefreshTokensService],
+   imports: [TypeOrmModule.forFeature([RefreshTokensEntity])],
+   controllers: [RefreshTokensController],
+   providers: [RefreshTokensService],
 })
 export class RefreshTokensModule {}
