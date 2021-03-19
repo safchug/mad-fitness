@@ -4,9 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { SheduleUsersModule } from './shedule_users/shedule_users.module';
+import { ClassesModule } from './classes/classes.module';
+import { SheduleModule } from './shedule/shedule.module';
 
 @Module({
-  imports: [UsersModule, SheduleUsersModule, TypeOrmModule.forRoot()],
+  imports: [ClassesModule, SheduleModule, UsersModule, SheduleUsersModule, TypeOrmModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })
