@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { UsersEntity } from '../../users/entity/users.entity';
-import { SheduleEntity } from '../../shedule/entity/shedule.entity'
+import SheduleEntity  from '../../shedule/entity/shedule.entity'
 
 
-Entity()
+@Entity()
 export class SheduleUsersEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -21,4 +21,4 @@ export class SheduleUsersEntity {
 
     @UpdateDateColumn({type: "timestamp", name: "updated_at", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     updatedAt: Date;
-}    
+}

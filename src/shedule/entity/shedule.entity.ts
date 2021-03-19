@@ -1,14 +1,15 @@
-import { Column, CreateDateColumn, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import User from '';
-import ClassEntity from "../../classes/entity/class.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { UsersEntity } from '../../users/entity/users.entity';
+import  ClassEntity  from "../../classes/entity/class.entity";
 
+@Entity()
 class SheduleEntity {
   @PrimaryGeneratedColumn({name: 'id'})
   id: number;
 
-  @OneToOne(() => User, user => user.id)
+  @OneToOne(() => UsersEntity, user => user.id)
   @JoinColumn()
-  trener: User;
+  trener: UsersEntity;
 
   @OneToOne(() => ClassEntity, classEntity => classEntity.id)
   @JoinColumn()
@@ -19,7 +20,7 @@ class SheduleEntity {
 
   @Column({name: 'location'})
   location: string;
-)
+
   @CreateDateColumn({name: "start_date", type: "timestamp"})
   startDate: Date;
 

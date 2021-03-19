@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Generated} from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Generated } from "typeorm";
 
 @Entity()
 export class InvitesEntity {
@@ -15,6 +15,6 @@ export class InvitesEntity {
     @UpdateDateColumn({type: "timestamp", name: "updated_at", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     updatedAt: Date;
 
-    @CreateDateColumn({type: "timestamp", name: "expires_at", default: () => "DATE_ADD(NOW(), INTERVAL 2 HOUR)"})
+    @CreateDateColumn({type: "timestamp", name: "expires_at", default: () => "NOW() + INTERVAL '6 HOUR'"})
     expiresAt: Date;
 }
