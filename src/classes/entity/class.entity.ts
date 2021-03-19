@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'class_entity' })
-class ClassEntity {
+export class ClassEntity {
    @PrimaryGeneratedColumn({ name: 'id' })
    id: number;
 
@@ -35,5 +35,3 @@ class ClassEntity {
    })
    updatedAt: Date;
 }
-
-export default ClassEntity;

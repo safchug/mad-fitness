@@ -8,10 +8,10 @@ import {
    UpdateDateColumn,
 } from 'typeorm';
 import { UsersEntity } from '../../users/entity/users.entity';
-import ClassEntity from '../../classes/entity/class.entity';
+import { ClassEntity } from '../../classes/entity/class.entity';
 
 @Entity()
-class SheduleEntity {
+export class SheduleEntity {
    @PrimaryGeneratedColumn({ name: 'id' })
    id: number;
 
@@ -50,5 +50,3 @@ class SheduleEntity {
    })
    updatedAt: Date;
 }
-
-export default SheduleEntity;
