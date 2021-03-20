@@ -16,7 +16,7 @@ class SheduleEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, userEntity => userEntity.id)
-  trener: UserEntity;
+  trainer: UserEntity;
 
   @ManyToOne(() => ClassEntity, classEntity => classEntity.id)
   class: ClassEntity;
