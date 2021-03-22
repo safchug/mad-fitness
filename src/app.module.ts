@@ -11,7 +11,17 @@ import { SheduleModule } from './shedule/shedule.module';
 import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './users_invites/users_invites.module';
 @Module({
-  imports: [RolesModule, RefreshTokensModule,ClassesModule, SheduleModule, UsersModule, SheduleUsersModule,InvitesModule, UsersInvitesModule,  TypeOrmModule.forRoot()],
+  imports: [
+    RolesModule,
+    RefreshTokensModule,
+    ClassesModule,
+    SheduleModule,
+    UsersModule,
+    SheduleUsersModule,
+    InvitesModule,
+    UsersInvitesModule,
+    TypeOrmModule.forRoot(),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

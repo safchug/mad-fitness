@@ -2,42 +2,49 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn, ManyToOne,
-  OneToOne,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from "typeorm";
-import UserEntity from '../../users/entity/users.entity';
-import ClassEntity from "../../classes/entity/class.entity";
+  UpdateDateColumn,
+} from 'typeorm';
+import { UsersEntity } from '../../users/entity/users.entity';
+import { ClassEntity } from '../../classes/entity/class.entity';
 
-@Entity({name: 'shedule_entity'})
-class SheduleEntity {
-  @PrimaryGeneratedColumn({name: 'id'})
+@Entity()
+export class SheduleEntity {
+  @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @ManyToOne(() => UserEntity, userEntity => userEntity.id)
-  trainer: UserEntity;
+  @ManyToOne(() => UsersEntity, (userEntity) => userEntity.id)
+  trainer: UsersEntity;
 
-  @ManyToOne(() => ClassEntity, classEntity => classEntity.id)
+  @ManyToOne(() => ClassEntity, (classEntity) => classEntity.id)
   class: ClassEntity;
 
-  @Column({name: 'description'})
+  @Column({ name: 'description' })
   description: string;
 
-  @Column({name: 'location'})
+  @Column({ name: 'location' })
   location: string;
-)
-  @CreateDateColumn({name: "start_date", type: "timestamp"})
+
+  @CreateDateColumn({ name: 'start_date', type: 'timestamp' })
   startDate: Date;
 
-  @Column({name: "end_date", type: "timestamp"})
+  @Column({ name: 'end_date', type: 'timestamp' })
   endDate: Date;
 
-  @CreateDateColumn({name: "created_at", type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)"})
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn({name: "updated_at", type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
   updatedAt: Date;
 }
-
-export default SheduleEntity;
