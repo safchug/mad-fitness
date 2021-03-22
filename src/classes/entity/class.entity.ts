@@ -11,9 +11,6 @@ class ClassEntity {
   @Column({name: 'description'})
   description: string;
 
-  @Column({name: 'label'})
-  label: string;
-
   @Column({name: 'max_person'})
   max: number;
 
