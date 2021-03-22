@@ -34,17 +34,14 @@ export class UsersEntity {
   active: boolean;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    nullable: true,
     name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
+    nullable: true,
     name: 'updated_at',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
 }
