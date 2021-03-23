@@ -11,7 +11,7 @@ import { UsersEntity } from '../../users/entity/users.entity';
 import { ClassEntity } from '../../classes/entity/class.entity';
 
 @Entity()
-export class SheduleEntity {
+export class ScheduleEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 

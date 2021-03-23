@@ -5,9 +5,9 @@ import { RolesModule } from './roles/roles.module';
 import { RefreshTokensModule } from './refresh-tokens/refresh-tokens.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { SheduleUsersModule } from './shedule_users/shedule_users.module';
+import { ScheduleUsersModule } from './schedule_users/schedule_users.module';
 import { ClassesModule } from './classes/classes.module';
-import { SheduleModule } from './shedule/shedule.module';
+import { ScheduleModule } from './schedule/schedule.module';
 import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './users_invites/users_invites.module';
 @Module({
@@ -15,9 +15,9 @@ import { UsersInvitesModule } from './users_invites/users_invites.module';
     RolesModule,
     RefreshTokensModule,
     ClassesModule,
-    SheduleModule,
+    ScheduleModule,
     UsersModule,
-    SheduleUsersModule,
+    ScheduleUsersModule,
     InvitesModule,
     UsersInvitesModule,
     TypeOrmModule.forRoot(),

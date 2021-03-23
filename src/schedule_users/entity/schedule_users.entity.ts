@@ -7,10 +7,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UsersEntity } from '../../users/entity/users.entity';
-import { SheduleEntity } from '../../shedule/entity/shedule.entity';
+import { ScheduleEntity } from '../../schedule/entity/schedule.entity';
 
 @Entity()
-export class SheduleUsersEntity {
+export class ScheduleUsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,9 +18,9 @@ export class SheduleUsersEntity {
   @JoinColumn({ name: 'user_id' })
   userId: number;
 
-  @ManyToOne(() => SheduleEntity)
-  @JoinColumn({ name: 'shedule_id' })
-  sheduleId: number;
+  @ManyToOne(() => ScheduleEntity)
+  @JoinColumn({ name: 'schedule_id' })
+  scheduleId: number;
 
   @CreateDateColumn({
     nullable: true,
