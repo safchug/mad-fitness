@@ -4,10 +4,10 @@ services:
     image: postgres:latest
     ports:
       - "5444:5432"
-    environment: 
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: db
+    env_file:
+      - .env
+    volumes:
+      - ./database/mad-fitness-init.sql:/docker-entrypoint-initdb.d/1-mad-fitness-init.sql
   api:
     build:
       dockerfile: Dockerfile
@@ -16,6 +16,5 @@ services:
       - database
     ports:
       - "3000:3000"
-    environment: 
-      DB_URL: postgres://postgres:password@database:5432/db
-      ENTITY_PATH: dist/*/entity/*.entity{.js,.ts}
+    env_file:
+      - .env
