@@ -7,6 +7,7 @@ You have to install [pgAdmin](https://www.postgresql.org/download/) and set </br
 username: postgres</br>password: password</br>
 Those fields can be modified in docker-compose.yml</br>
 Also you have to install [Docker](https://www.docker.com/get-started)</br>
+Then copy .env.example file in your folder and rename it to .env</br>
 Then open your terminal:
 ```bash
 $ git clone https://github.com/safchug/mad-fitness
