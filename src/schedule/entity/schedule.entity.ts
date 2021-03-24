@@ -8,18 +8,18 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UsersEntity } from '../../users/entity/users.entity';
-import { ClassEntity } from '../../classes/entity/class.entity';
+import { ClassesEntity } from '../../classes/entity/classes.entity';
 
 @Entity({name:'schedule'})
 export class ScheduleEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @ManyToOne(() => UsersEntity, (userEntity) => userEntity.id)
+  @ManyToOne(() => UsersEntity, (usersEntity) => usersEntity.id)
   trainer: UsersEntity;
 
-  @ManyToOne(() => ClassEntity, (classEntity) => classEntity.id)
-  class: ClassEntity;
+  @ManyToOne(() => ClassesEntity, (classesEntity) => classesEntity.id)
+  class: ClassesEntity;
 
   @Column({ name: 'description' })
   description: string;
