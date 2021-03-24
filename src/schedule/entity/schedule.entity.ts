@@ -10,7 +10,7 @@ import {
 import { UsersEntity } from '../../users/entity/users.entity';
 import { ClassEntity } from '../../classes/entity/class.entity';
 
-@Entity()
+@Entity({name:'schedule'})
 export class ScheduleEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
