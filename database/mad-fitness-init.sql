@@ -581,3 +581,5 @@ ALTER TABLE ONLY public.users
 -- PostgreSQL database dump complete
 --
 --
+
+INSERT INTO public.roles (role) VALUES ('admin'), ('trainer'), ('user');
