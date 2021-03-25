@@ -5,7 +5,7 @@
 -- Dumped from database version 13.2 (Debian 13.2-1.pgdg100+1)
 -- Dumped by pg_dump version 13.2 (Ubuntu 13.2-1.pgdg18.04+1)
 
--- Started on 2021-03-24 13:23:08 EET
+-- Started on 2021-03-25 13:10:38 EET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -27,7 +27,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;
 
 
 --
--- TOC entry 3053 (class 0 OID 0)
+-- TOC entry 3052 (class 0 OID 0)
 -- Dependencies: 2
 -- Name: EXTENSION "uuid-ossp"; Type: COMMENT; Schema: -; Owner:
 --
@@ -73,7 +73,7 @@ CREATE SEQUENCE public.classes_id_seq
 ALTER TABLE public.classes_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3054 (class 0 OID 0)
+-- TOC entry 3053 (class 0 OID 0)
 -- Dependencies: 202
 -- Name: classes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -114,7 +114,7 @@ CREATE SEQUENCE public.invites_id_seq
 ALTER TABLE public.invites_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3055 (class 0 OID 0)
+-- TOC entry 3054 (class 0 OID 0)
 -- Dependencies: 204
 -- Name: invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -155,7 +155,7 @@ CREATE SEQUENCE public.refresh_tokens_id_seq
 ALTER TABLE public.refresh_tokens_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3056 (class 0 OID 0)
+-- TOC entry 3055 (class 0 OID 0)
 -- Dependencies: 206
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -195,7 +195,7 @@ CREATE SEQUENCE public.roles_id_seq
 ALTER TABLE public.roles_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3057 (class 0 OID 0)
+-- TOC entry 3056 (class 0 OID 0)
 -- Dependencies: 208
 -- Name: roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -240,7 +240,7 @@ CREATE SEQUENCE public.schedule_id_seq
 ALTER TABLE public.schedule_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3058 (class 0 OID 0)
+-- TOC entry 3057 (class 0 OID 0)
 -- Dependencies: 210
 -- Name: schedule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -281,7 +281,7 @@ CREATE SEQUENCE public.schedule_users_id_seq
 ALTER TABLE public.schedule_users_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3059 (class 0 OID 0)
+-- TOC entry 3058 (class 0 OID 0)
 -- Dependencies: 212
 -- Name: schedule_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -296,12 +296,12 @@ ALTER SEQUENCE public.schedule_users_id_seq OWNED BY public.schedule_users.id;
 
 CREATE TABLE public.users (
     id integer NOT NULL,
-    username character varying,
+    first_name character varying,
     password character varying,
     role_id integer,
     email character varying,
-    fullname character varying,
-    active boolean,
+    last_name character varying,
+    active boolean DEFAULT true,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
@@ -326,7 +326,7 @@ CREATE SEQUENCE public.users_id_seq
 ALTER TABLE public.users_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3060 (class 0 OID 0)
+-- TOC entry 3059 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -367,7 +367,7 @@ CREATE SEQUENCE public.users_invites_id_seq
 ALTER TABLE public.users_invites_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3061 (class 0 OID 0)
+-- TOC entry 3060 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: users_invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -432,7 +432,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- TOC entry 2885 (class 2604 OID 16464)
+-- TOC entry 2886 (class 2604 OID 16464)
 -- Name: users_invites id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -440,7 +440,7 @@ ALTER TABLE ONLY public.users_invites ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
--- TOC entry 2887 (class 2606 OID 16466)
+-- TOC entry 2888 (class 2606 OID 16466)
 -- Name: classes classes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -449,7 +449,7 @@ ALTER TABLE ONLY public.classes
 
 
 --
--- TOC entry 2889 (class 2606 OID 16468)
+-- TOC entry 2890 (class 2606 OID 16468)
 -- Name: invites invites_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -458,7 +458,7 @@ ALTER TABLE ONLY public.invites
 
 
 --
--- TOC entry 2891 (class 2606 OID 16470)
+-- TOC entry 2892 (class 2606 OID 16470)
 -- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -467,7 +467,7 @@ ALTER TABLE ONLY public.refresh_tokens
 
 
 --
--- TOC entry 2893 (class 2606 OID 24716)
+-- TOC entry 2894 (class 2606 OID 24716)
 -- Name: roles role_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -476,7 +476,7 @@ ALTER TABLE ONLY public.roles
 
 
 --
--- TOC entry 2895 (class 2606 OID 16472)
+-- TOC entry 2896 (class 2606 OID 16472)
 -- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -485,7 +485,7 @@ ALTER TABLE ONLY public.roles
 
 
 --
--- TOC entry 2897 (class 2606 OID 16474)
+-- TOC entry 2898 (class 2606 OID 16474)
 -- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -494,7 +494,7 @@ ALTER TABLE ONLY public.schedule
 
 
 --
--- TOC entry 2899 (class 2606 OID 16476)
+-- TOC entry 2900 (class 2606 OID 16476)
 -- Name: schedule_users schedule_users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -503,7 +503,7 @@ ALTER TABLE ONLY public.schedule_users
 
 
 --
--- TOC entry 2901 (class 2606 OID 16478)
+-- TOC entry 2902 (class 2606 OID 16478)
 -- Name: schedule_users schedule_users_user_id_schedule_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -512,7 +512,7 @@ ALTER TABLE ONLY public.schedule_users
 
 
 --
--- TOC entry 2903 (class 2606 OID 24720)
+-- TOC entry 2904 (class 2606 OID 24720)
 -- Name: users unique_email; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -521,16 +521,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2905 (class 2606 OID 24718)
--- Name: users unique_name; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT unique_name UNIQUE (username);
-
-
---
--- TOC entry 2909 (class 2606 OID 16480)
+-- TOC entry 2908 (class 2606 OID 16480)
 -- Name: users_invites users_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -539,7 +530,7 @@ ALTER TABLE ONLY public.users_invites
 
 
 --
--- TOC entry 2907 (class 2606 OID 16482)
+-- TOC entry 2906 (class 2606 OID 16482)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -548,7 +539,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 2910 (class 2606 OID 16483)
+-- TOC entry 2909 (class 2606 OID 16483)
 -- Name: refresh_tokens refresh_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -557,7 +548,7 @@ ALTER TABLE ONLY public.refresh_tokens
 
 
 --
--- TOC entry 2911 (class 2606 OID 16488)
+-- TOC entry 2910 (class 2606 OID 16488)
 -- Name: schedule schedule_class_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -566,7 +557,7 @@ ALTER TABLE ONLY public.schedule
 
 
 --
--- TOC entry 2912 (class 2606 OID 16493)
+-- TOC entry 2911 (class 2606 OID 16493)
 -- Name: schedule schedule_trainer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -575,7 +566,7 @@ ALTER TABLE ONLY public.schedule
 
 
 --
--- TOC entry 2913 (class 2606 OID 16498)
+-- TOC entry 2912 (class 2606 OID 16498)
 -- Name: schedule_users schedule_users_schedule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -584,7 +575,7 @@ ALTER TABLE ONLY public.schedule_users
 
 
 --
--- TOC entry 2914 (class 2606 OID 16503)
+-- TOC entry 2913 (class 2606 OID 16503)
 -- Name: schedule_users schedule_users_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -593,7 +584,7 @@ ALTER TABLE ONLY public.schedule_users
 
 
 --
--- TOC entry 2916 (class 2606 OID 16508)
+-- TOC entry 2915 (class 2606 OID 16508)
 -- Name: users_invites users_invites_invite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -602,7 +593,7 @@ ALTER TABLE ONLY public.users_invites
 
 
 --
--- TOC entry 2917 (class 2606 OID 16513)
+-- TOC entry 2916 (class 2606 OID 16513)
 -- Name: users_invites users_invites_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -611,7 +602,7 @@ ALTER TABLE ONLY public.users_invites
 
 
 --
--- TOC entry 2915 (class 2606 OID 16518)
+-- TOC entry 2914 (class 2606 OID 16518)
 -- Name: users users_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -619,7 +610,7 @@ ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id);
 
 
--- Completed on 2021-03-24 13:23:09 EET
+-- Completed on 2021-03-25 13:10:38 EET
 
 --
 -- PostgreSQL database dump complete
