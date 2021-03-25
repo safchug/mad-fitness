@@ -15,7 +15,7 @@ export class UsersEntity {
   id: number;
 
   @Column({ type: 'varchar', length: 100 })
-  username: string;
+  firstname: string;
 
   @Column({ type: 'varchar', length: 100 })
   password: string;
@@ -28,7 +28,7 @@ export class UsersEntity {
   email: string;
 
   @Column({ type: 'varchar', length: 100 })
-  fullname: string;
+  lastname: string;
 
   @Column({ type: 'boolean', default: false })
   active: boolean;
