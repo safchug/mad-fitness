@@ -15,17 +15,16 @@ export class RolesEntity {
   role: string;
 
   @CreateDateColumn({
-    type: 'timestamp',
+    nullable: true,
     name: 'created_at',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    select: false,
   })
   createdAt: Date;
 
   @UpdateDateColumn({
-    type: 'timestamp',
+    nullable: true,
     name: 'updated_at',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    select: false,
   })
   updatedAt: Date;
 }
