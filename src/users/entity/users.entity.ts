@@ -14,7 +14,7 @@ export class UsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ name: 'first_name', type: 'varchar', length: 100 })
   firstname: string;
 
   @Column({ type: 'varchar', length: 100 })
@@ -27,7 +27,7 @@ export class UsersEntity {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ name: 'last_name', type: 'varchar', length: 100 })
   lastname: string;
 
   @Column({ type: 'boolean', default: false })
