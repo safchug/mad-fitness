@@ -9,13 +9,13 @@ import {
 } from 'typeorm';
 import { RolesEntity } from '../../roles/entity/roles.entity';
 
-@Entity()
+@Entity({ name: 'users' })
 export class UsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100 })
-  username: string;
+  @Column({ name: 'first_name', type: 'varchar', length: 100 })
+  firstname: string;
 
   @Column({ type: 'varchar', length: 100 })
   password: string;
@@ -27,10 +27,10 @@ export class UsersEntity {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  fullname: string;
+  @Column({ name: 'last_name', type: 'varchar', length: 100 })
+  lastname: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
   active: boolean;
 
   @CreateDateColumn({

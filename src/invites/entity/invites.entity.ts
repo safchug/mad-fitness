@@ -7,7 +7,7 @@ import {
   Generated,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'invites' })
 export class InvitesEntity {
   @PrimaryGeneratedColumn()
   id: number;

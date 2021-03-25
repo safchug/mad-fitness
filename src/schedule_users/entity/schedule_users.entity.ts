@@ -9,7 +9,7 @@ import {
 import { UsersEntity } from '../../users/entity/users.entity';
 import { ScheduleEntity } from '../../schedule/entity/schedule.entity';
 
-@Entity()
+@Entity({ name: 'schedule_users' })
 export class ScheduleUsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
