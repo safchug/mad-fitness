@@ -30,7 +30,7 @@ export class UsersEntity {
   @Column({ name: 'last_name', type: 'varchar', length: 100 })
   lastname: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
   active: boolean;
 
   @CreateDateColumn({
