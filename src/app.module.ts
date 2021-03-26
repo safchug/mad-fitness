@@ -12,6 +12,7 @@ import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './users_invites/users_invites.module';
 import { UsersInvitesService } from './users_invites/users-invites.service';
 import { UsersInvitesController } from './users_invites/users-invites.controller';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersInvitesController } from './users_invites/users-invites.controller
     InvitesModule,
     UsersInvitesModule,
     TypeOrmModule.forRoot(),
+    EmailModule,
   ],
   controllers: [AppController, UsersInvitesController],
   providers: [AppService, UsersInvitesService],

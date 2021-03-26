@@ -3,39 +3,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersInvitesEntity } from './entity/users_invites.entity';
 import { UsersInvitesService } from './users-invites.service';
 import { JwtModule } from '@nestjs/jwt';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { join } from 'path';
+import 'dotenv/config';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsersInvitesEntity]),
+    EmailModule,
     JwtModule.register({
       secretOrPrivateKey: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1w' },
-    }),
-    MailerModule.forRoot({
-      transport: {
-        host: process.env.MAIL_HOST,
-        secure: false,
-        auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASSWORD,
-        },
-      },
-      defaults: {
-        from: process.env.MAIL_USER,
-      },
-      template: {
-        dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
-        options: {
-          strict: true,
-        },
-      },
     }),
   ],
   providers: [UsersInvitesService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, JwtModule],
 })
 export class UsersInvitesModule {}
