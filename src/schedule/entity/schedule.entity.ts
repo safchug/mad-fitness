@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -10,7 +9,7 @@ import {
 import { UsersEntity } from '../../users/entity/users.entity';
 import { ClassesEntity } from '../../classes/entity/classes.entity';
 
-@Entity({name:'schedule'})
+@Entity({ name: 'schedule' })
 export class ScheduleEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;

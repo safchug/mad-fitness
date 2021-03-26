@@ -10,6 +10,9 @@ import { ClassesModule } from './classes/classes.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './users_invites/users_invites.module';
+import { UsersInvitesService } from './users_invites/users-invites.service';
+import { UsersInvitesController } from './users_invites/users-invites.controller';
+
 @Module({
   imports: [
     RolesModule,
@@ -22,7 +25,7 @@ import { UsersInvitesModule } from './users_invites/users_invites.module';
     UsersInvitesModule,
     TypeOrmModule.forRoot(),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, UsersInvitesController],
+  providers: [AppService, UsersInvitesService],
 })
 export class AppModule {}

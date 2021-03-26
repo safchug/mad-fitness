@@ -9,18 +9,20 @@ import {
 import { UsersEntity } from '../../users/entity/users.entity';
 import { InvitesEntity } from '../../invites/entity/invites.entity';
 
-@Entity({name:'users_invites'})
+@Entity({ name: 'users_invites' })
 export class UsersInvitesEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UsersEntity)
-  @JoinColumn({ name: 'user_id' })
-  userId: number;
+  @ManyToOne(() => UsersEntity, (user) => user.id, {
+    cascade: true,
+  })
+  user: UsersEntity;
 
-  @ManyToOne(() => InvitesEntity)
-  @JoinColumn({ name: 'invite_id' })
-  inviteId: number;
+  @ManyToOne(() => InvitesEntity, (invite) => invite.id, {
+    cascade: true,
+  })
+  invite: InvitesEntity;
 
   @CreateDateColumn({
     type: 'timestamp',
