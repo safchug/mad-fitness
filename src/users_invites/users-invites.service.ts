@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
-import { getConnection } from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { getConnection, getRepository } from 'typeorm';
 import { UsersInvitesEntity } from './entity/users_invites.entity';
 import { UsersEntity } from '../users/entity/users.entity';
 import { InvitesEntity } from '../invites/entity/invites.entity';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from '../email/email.service';
+import { RolesEntity } from '../roles/entity/roles.entity';
+import { UserDataDto } from './dto/userData.dto';
 
 @Injectable()
 export class UsersInvitesService {
@@ -14,7 +15,7 @@ export class UsersInvitesService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async createAndSendInvate(data: any): Promise<any> {
+  async createAndSendInvate(data: UserDataDto): Promise<any> {
     let message = {};
     const connection = getConnection();
     const queryRunner = connection.createQueryRunner();
@@ -22,7 +23,7 @@ export class UsersInvitesService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      const userInvite = this.createIvite(data);
+      const userInvite = await this.createIvite(data);
 
       const result = await queryRunner.manager.save(userInvite);
 
@@ -34,7 +35,7 @@ export class UsersInvitesService {
       });
 
       await this.emailService.sendInvite(
-        { name: data.name, email: data.email },
+        { name: data.firstName, email: data.email },
         token,
       );
 
@@ -42,22 +43,23 @@ export class UsersInvitesService {
 
       message = { message: 'SUCCESS' };
     } catch (err) {
-      // since we have errors lets rollback the changes we made
       await queryRunner.rollbackTransaction();
       message = { message: 'FAILURE', err };
     } finally {
-      // you need to release a queryRunner which was manually instantiated
       await queryRunner.release();
     }
     return message;
   }
 
-  private createIvite(data): UsersInvitesEntity {
+  private async createIvite(data: UserDataDto): Promise<UsersInvitesEntity> {
     const user = new UsersEntity();
     user.firstname = data.firstName;
     user.lastname = data.lastName;
     user.email = data.email;
     user.password = 'secret';
+    const roleRepository = getRepository(RolesEntity);
+    const role = await roleRepository.findOne({ role: data.role });
+    user.role = role;
     const invite = new InvitesEntity();
     const userInvite = new UsersInvitesEntity();
     userInvite.invite = invite;

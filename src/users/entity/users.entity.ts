@@ -20,9 +20,10 @@ export class UsersEntity {
   @Column({ type: 'varchar', length: 100 })
   password: string;
 
-  @ManyToOne(() => RolesEntity)
-  @JoinColumn({ name: 'role_id' })
-  roleId: number;
+  @ManyToOne(() => RolesEntity, (role) => role.id, {
+    cascade: true,
+  })
+  role: RolesEntity;
 
   @Column({ type: 'varchar', length: 100 })
   email: string;
