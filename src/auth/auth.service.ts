@@ -1,4 +1,8 @@
-import { UnprocessableEntityException, Injectable } from '@nestjs/common';
+import {
+  UnprocessableEntityException,
+  Injectable,
+  HttpException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/interface/users.interface';
 import { RefreshTokensService } from '../refreshTokens/refreshTokens.service';
@@ -7,7 +11,6 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import { jwtConstants } from './constants';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { Role } from '../roles/interface/roles.interface';
 import {
   TokenPayload,
   RefreshTokenPayload,
@@ -24,6 +27,9 @@ export class AuthService {
 
   public async validateUser(email: string, password: string): Promise<User> {
     const user: User = await this.usersService.findByEmail(email);
+    if (!user) {
+      return null;
+    }
     const passwordMatch: boolean = await bcrypt.compare(
       password,
       user.password,
@@ -34,6 +40,18 @@ export class AuthService {
       return result;
     }
     return null;
+  }
+
+  public async validateToken(token: string): Promise<void> {
+    try {
+      await this.jwtService.verifyAsync(token);
+    } catch (e) {
+      if (e instanceof TokenExpiredError) {
+        throw new HttpException(`token expired`, 401); //UnauthorizedException();
+      } else {
+        throw new HttpException(`token not valid`, 401);
+      }
+    }
   }
 
   private async generateAccessToken(user: User): Promise<string> {

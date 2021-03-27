@@ -15,6 +15,6 @@ export interface TokenResponse {
   refresh_token?: string;
 }
 
-export interface RefreshRequest {
-  refresh_token: string;
-}
+// export interface RefreshRequest {
+//   refresh_token: string;
+// }
