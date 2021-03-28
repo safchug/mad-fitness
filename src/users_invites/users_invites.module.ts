@@ -12,6 +12,7 @@ import { EmailModule } from '../email/email.module';
     EmailModule,
     JwtModule.register({
       secretOrPrivateKey: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1w' },
     }),
   ],
   providers: [UsersInvitesService],

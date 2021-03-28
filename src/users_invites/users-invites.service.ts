@@ -61,6 +61,10 @@ export class UsersInvitesService {
     const role = await roleRepository.findOne({ role: data.role });
     user.role = role;
     const invite = new InvitesEntity();
+    const now = new Date();
+    //TODO: raise time duration in props of the method
+    const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    invite.expiresAt = expiresAt;
     const userInvite = new UsersInvitesEntity();
     userInvite.invite = invite;
     userInvite.user = user;
