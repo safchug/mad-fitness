@@ -12,7 +12,7 @@ export class EmailService {
     return this.mailService.sendMail({
       to: user.email,
       // from: '"Support Team" <support@example.com>', // override default from
-      subject: 'Welcome to Nice App! Confirm your Email',
+      subject: 'Welcome to Mad fitness. Please continue your registration!',
       template: 'invite', // `.hbs` extension is appended automatically
       context: {
         // ✏️ filling curly brackets with content
