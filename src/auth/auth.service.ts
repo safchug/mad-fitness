@@ -2,10 +2,14 @@ import {
   UnprocessableEntityException,
   Injectable,
   HttpException,
+  Inject,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { IUsersService, USERS_SERVICE } from '../users/users.service';
 import { User } from '../users/interface/users.interface';
-import { RefreshTokensService } from '../refreshTokens/refreshTokens.service';
+import {
+  REFRESH_TOKENS_SERVICE,
+  IRefreshTokensService,
+} from '../refreshTokens/refreshTokens.service';
 import { RefreshToken } from '../refreshTokens/interface/refreshTokens.interface';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { jwtConstants } from './constants';
@@ -17,11 +21,25 @@ import {
   TokenResponse,
 } from './interface/auth.interface';
 
+export const AUTH_SERVICE = 'AUTH SERVICE';
+export interface IAuthService {
+  validateUser(email: string, password: string): Promise<User>;
+  validateToken(token: string): Promise<void>;
+  generateAccessToken(user: User): Promise<string>;
+  generateRefreshToken(user: User, expiresIn: string): Promise<string>;
+  decodeRefreshToken(token: string): Promise<RefreshTokenPayload>;
+  getUserFromRefreshTokenPayload(payload: RefreshTokenPayload): Promise<User>;
+  resolveRefreshToken(encoded: string): Promise<User>;
+  createAccessTokenFromRefreshToken(refresh: string): Promise<string>;
+  login(user: User): Promise<TokenResponse>;
+}
+
 @Injectable()
-export class AuthService {
+export class AuthService implements IAuthService {
   constructor(
-    private usersService: UsersService,
-    private refreshTokensService: RefreshTokensService,
+    @Inject(REFRESH_TOKENS_SERVICE)
+    private readonly refreshTokensService: IRefreshTokensService,
+    @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
     private jwtService: JwtService,
   ) {}
 
@@ -54,7 +72,7 @@ export class AuthService {
     }
   }
 
-  private async generateAccessToken(user: User): Promise<string> {
+  public async generateAccessToken(user: User): Promise<string> {
     const payload: TokenPayload = {
       email: user.email,
       sub: user.id,
@@ -63,7 +81,7 @@ export class AuthService {
     return this.jwtService.signAsync(payload);
   }
 
-  private async generateRefreshToken(
+  public async generateRefreshToken(
     user: User,
     expiresIn: string,
   ): Promise<string> {
@@ -92,7 +110,7 @@ export class AuthService {
     }
   }
 
-  private async getUserFromRefreshTokenPayload(
+  public async getUserFromRefreshTokenPayload(
     payload: RefreshTokenPayload,
   ): Promise<User> {
     const subId: number = payload.sub;

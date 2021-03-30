@@ -4,8 +4,18 @@ import { Repository } from 'typeorm';
 import { RefreshTokensEntity } from './entity/refreshTokens.entity';
 import { RefreshToken } from './interface/refreshTokens.interface';
 
+export const REFRESH_TOKENS_SERVICE = 'REFRESH TOKENS SERVICE';
+
+export interface IRefreshTokensService {
+  findByToken(token: string): Promise<RefreshToken | null>;
+  findById(id: number): Promise<RefreshToken | null>;
+  findByUserId(userId: number): Promise<RefreshToken | null>;
+  findAll(): Promise<RefreshToken[]>;
+  saveRefreshToken(tokenStr: string, userId: number): Promise<RefreshToken>;
+}
+
 @Injectable()
-export class RefreshTokensService {
+export class RefreshTokensService implements IRefreshTokensService {
   constructor(
     @InjectRepository(RefreshTokensEntity)
     private refreshTokensRepository: Repository<RefreshTokensEntity>,

@@ -5,8 +5,20 @@ import { UsersEntity } from './entity/users.entity';
 import * as bcrypt from 'bcrypt';
 import { User } from './interface/users.interface';
 
+export const USERS_SERVICE = 'USERS SERVICE';
+export interface IUsersService {
+  findOne(firstName: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  findById(id: number): Promise<User | null>;
+  findAll(): Promise<User[]>;
+  saveUser(user: User): Promise<User>;
+  saveUnregisteredUser(user: User): Promise<User>;
+  updateUser(id: number, user: User): Promise<User>;
+  removeUser(id: number): Promise<DeleteResult>;
+}
+
 @Injectable()
-export class UsersService {
+export class UsersService implements IUsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private usersRepository: Repository<UsersEntity>,

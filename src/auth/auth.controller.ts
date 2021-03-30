@@ -5,8 +5,9 @@ import {
   Request,
   Body,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService, IAuthService, AUTH_SERVICE } from './auth.service';
 import { User } from '../users/interface/users.interface';
 import { LocalAuthGuard } from '../auth/local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -16,7 +17,10 @@ import { RefreshRequestDto } from './dto/refreshRequest.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  //  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject(AUTH_SERVICE) private readonly authService: IAuthService,
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')

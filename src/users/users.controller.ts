@@ -10,9 +10,10 @@ import {
   HttpException,
   HttpStatus,
   ParseIntPipe,
+  Inject,
 } from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { UsersService } from './users.service';
+import { DeleteResult } from 'typeorm';
+import { IUsersService, USERS_SERVICE } from './users.service';
 import { User } from './interface/users.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -22,7 +23,9 @@ import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
