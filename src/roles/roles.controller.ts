@@ -6,10 +6,10 @@ import {
   Param,
   UseGuards,
   ParseIntPipe,
+  Inject,
 } from '@nestjs/common';
-import { RolesService } from './roles.service';
+import { IRolesService, ROLES_SERVICE } from './roles.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { RolesEntity } from './entity/roles.entity';
 import { Role } from './interface/roles.interface';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -17,11 +17,14 @@ import { CreateRolesDto } from './dto/createRoles.dto';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+  //constructor(private readonly rolesService: RolesService) {}
+  constructor(
+    @Inject(ROLES_SERVICE) private readonly rolesService: IRolesService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  //@Roles('admin', 'trainer')
+  @Roles('admin', 'trainer')
   async findAll(): Promise<Role[]> {
     return await this.rolesService.findAll();
   }
