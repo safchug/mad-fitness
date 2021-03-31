@@ -7,7 +7,7 @@ import {
   UseGuards,
   Inject,
 } from '@nestjs/common';
-import { AuthService, IAuthService, AUTH_SERVICE } from './auth.service';
+import { IAuthService, AUTH_SERVICE } from './auth.service';
 import { User } from '../users/interface/users.interface';
 import { LocalAuthGuard } from '../auth/local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -17,7 +17,6 @@ import { RefreshRequestDto } from './dto/refreshRequest.dto';
 
 @Controller('auth')
 export class AuthController {
-  //  constructor(private readonly authService: AuthService) {}
   constructor(
     @Inject(AUTH_SERVICE) private readonly authService: IAuthService,
   ) {}
@@ -28,7 +27,7 @@ export class AuthController {
     @Body() body: LoginUserDto,
     @Request() req,
   ): Promise<TokenResponse> {
-    return this.authService.login(req.user);
+    return await this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -39,7 +38,6 @@ export class AuthController {
 
   @Post('refresh')
   async refresh(@Body() body: RefreshRequestDto): Promise<TokenResponse> {
-    await this.authService.validateToken(body.refresh_token); //check if not expired and valid
     const token: string = await this.authService.createAccessTokenFromRefreshToken(
       body.refresh_token,
     );

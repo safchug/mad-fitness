@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
 import { UsersEntity } from './entity/users.entity';
@@ -13,7 +13,7 @@ export interface IUsersService {
   findAll(): Promise<User[]>;
   saveUser(user: User): Promise<User>;
   saveUnregisteredUser(user: User): Promise<User>;
-  updateUser(id: number, user: User): Promise<User>;
+  updateUser(user: User): Promise<User>;
   removeUser(id: number): Promise<DeleteResult>;
 }
 
@@ -53,14 +53,30 @@ export class UsersService implements IUsersService {
   }
 
   async saveUnregisteredUser(user: User): Promise<User> {
-    return await this.usersRepository.save(user);
+    const foundUser: User = await this.findByEmail(user.email);
+    if (foundUser) {
+      throw new HttpException('User exists!', 400);
+    }
+    try {
+      const unregisteredUser: User = await this.usersRepository.save(user);
+      return unregisteredUser;
+    } catch (e) {
+      throw new HttpException('Bad credentials!', 400);
+    }
   }
 
-  async updateUser(id: number, user: User): Promise<User> {
+  async updateUser(user: User): Promise<User> {
+    const userFound: User = await this.findByEmail(user.email); //then check invite for expire and if exists by user.id from invites repository,
+    if (!userFound) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
     const hashedPassword: string = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
-    const result: UpdateResult = await this.usersRepository.update(id, user);
-    return await this.findById(id);
+    const result: UpdateResult = await this.usersRepository.update(
+      userFound.id,
+      user,
+    );
+    return await this.findById(userFound.id);
   }
 
   async removeUser(id: number): Promise<DeleteResult> {

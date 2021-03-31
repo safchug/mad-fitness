@@ -4,6 +4,7 @@ import { UsersService, USERS_SERVICE } from './users.service';
 import { UsersEntity } from './entity/users.entity';
 import { UsersController } from './users.controller';
 import { AuthModule } from '../auth/auth.module';
+import { usersService } from '../configDi';
 
 @Module({
   imports: [
@@ -11,12 +12,7 @@ import { AuthModule } from '../auth/auth.module';
     TypeOrmModule.forFeature([UsersEntity]),
   ],
   controllers: [UsersController],
-  providers: [
-    {
-      useClass: UsersService,
-      provide: USERS_SERVICE,
-    },
-  ],
+  providers: [usersService],
   exports: [USERS_SERVICE],
 })
 export class UsersModule {}

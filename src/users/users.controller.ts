@@ -50,11 +50,7 @@ export class UsersController {
   @Post('new')
   @Roles('admin', 'trainer')
   async create(@Body() user: CreateUserDto): Promise<User> {
-    try {
-      return await this.usersService.saveUnregisteredUser(user);
-    } catch (e) {
-      throw new HttpException('User exists!', 400);
-    }
+    return await this.usersService.saveUnregisteredUser(user);
   }
 
   //@UseGuards(JwtAuthGuard)
@@ -64,11 +60,7 @@ export class UsersController {
     @Param('invite') invite: string,
   ): Promise<User> {
     //not done yet!!!!
-    const userFound: User = await this.usersService.findByEmail(user.email); //then check invite for expire and if exists by user.id from invites repository,
-    if (!userFound) {
-      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
-    }
-    return await this.usersService.updateUser(userFound.id, user);
+    return await this.usersService.updateUser(user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

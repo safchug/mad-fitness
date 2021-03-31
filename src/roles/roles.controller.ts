@@ -17,7 +17,6 @@ import { CreateRolesDto } from './dto/createRoles.dto';
 
 @Controller('roles')
 export class RolesController {
-  //constructor(private readonly rolesService: RolesService) {}
   constructor(
     @Inject(ROLES_SERVICE) private readonly rolesService: IRolesService,
   ) {}

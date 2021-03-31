@@ -132,6 +132,8 @@ export class AuthService implements IAuthService {
   public async createAccessTokenFromRefreshToken(
     refresh: string,
   ): Promise<string> {
+    await this.validateToken(refresh);
+
     const user: User = await this.resolveRefreshToken(refresh);
     const foundInDb: RefreshToken = await this.refreshTokensService.findByToken(
       refresh,
