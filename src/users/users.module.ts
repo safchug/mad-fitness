@@ -4,7 +4,7 @@ import { UsersService, USERS_SERVICE } from './users.service';
 import { UsersEntity } from './entity/users.entity';
 import { UsersController } from './users.controller';
 import { AuthModule } from '../auth/auth.module';
-import { usersService } from '../configDi';
+import { usersService, usersDAO } from '../configDi';
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { usersService } from '../configDi';
     TypeOrmModule.forFeature([UsersEntity]),
   ],
   controllers: [UsersController],
-  providers: [usersService],
+  providers: [usersService, usersDAO],
   exports: [USERS_SERVICE],
 })
 export class UsersModule {}

@@ -1,11 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { RefreshTokensEntity } from './entity/refreshTokens.entity';
+import { Injectable, Inject } from '@nestjs/common';
 import { RefreshToken } from './interface/refreshTokens.interface';
+import { REFRESH_TOKENS_DAO, IRefreshTokensDAO } from '../DAO/refreshTokensDAO';
 
 export const REFRESH_TOKENS_SERVICE = 'REFRESH TOKENS SERVICE';
-
 export interface IRefreshTokensService {
   findByToken(token: string): Promise<RefreshToken | null>;
   findById(id: number): Promise<RefreshToken | null>;
@@ -17,24 +14,24 @@ export interface IRefreshTokensService {
 @Injectable()
 export class RefreshTokensService implements IRefreshTokensService {
   constructor(
-    @InjectRepository(RefreshTokensEntity)
-    private refreshTokensRepository: Repository<RefreshTokensEntity>,
+    @Inject(REFRESH_TOKENS_DAO)
+    private readonly refreshTokensDAO: IRefreshTokensDAO,
   ) {}
 
   async findByToken(token: string): Promise<RefreshToken | null> {
-    return await this.refreshTokensRepository.findOne({ token }); //, {relations: ['userId']}
+    return await this.refreshTokensDAO.findOne(token);
   }
 
   async findById(id: number): Promise<RefreshToken | null> {
-    return this.refreshTokensRepository.findOne({ id });
+    return await this.refreshTokensDAO.findById(id);
   }
 
   async findByUserId(userId: number): Promise<RefreshToken | null> {
-    return this.refreshTokensRepository.findOne({ userId });
+    return await this.refreshTokensDAO.findByUserId(userId);
   }
 
   async findAll(): Promise<RefreshToken[]> {
-    const allTokens = await this.refreshTokensRepository.find({});
+    const allTokens = await this.refreshTokensDAO.find();
     return allTokens;
   }
 
@@ -44,11 +41,9 @@ export class RefreshTokensService implements IRefreshTokensService {
   ): Promise<RefreshToken> {
     const existToken = await this.findByUserId(userId); //check if token exists for current user, and update it
     if (existToken) {
-      await this.refreshTokensRepository.update(existToken.id, {
-        token: tokenStr,
-      });
+      await this.refreshTokensDAO.update(existToken.id, tokenStr);
       return await this.findByUserId(userId);
     }
-    return await this.refreshTokensRepository.save({ token: tokenStr, userId });
+    return await this.refreshTokensDAO.save({ token: tokenStr, userId });
   }
 }

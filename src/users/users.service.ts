@@ -1,9 +1,7 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult, UpdateResult } from 'typeorm';
-import { UsersEntity } from './entity/users.entity';
+import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from './interface/users.interface';
+import { USERS_DAO, IUsersDAO } from '../DAO/usersDAO';
 
 export const USERS_SERVICE = 'USERS SERVICE';
 export interface IUsersService {
@@ -14,32 +12,27 @@ export interface IUsersService {
   saveUser(user: User): Promise<User>;
   saveUnregisteredUser(user: User): Promise<User>;
   updateUser(user: User): Promise<User>;
-  removeUser(id: number): Promise<DeleteResult>;
+  removeUser(id: number): Promise<User>;
 }
 
 @Injectable()
 export class UsersService implements IUsersService {
-  constructor(
-    @InjectRepository(UsersEntity)
-    private usersRepository: Repository<UsersEntity>,
-  ) {}
+  constructor(@Inject(USERS_DAO) private readonly usersDAO: IUsersDAO) {}
 
   async findOne(firstName: string): Promise<User | null> {
-    return await this.usersRepository.findOne({ firstName });
+    return await this.usersDAO.findByFirstName(firstName);
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.usersRepository.findOne({ email });
+    return await this.usersDAO.findOne(email);
   }
 
   async findById(id: number): Promise<User | null> {
-    return await this.usersRepository.findOne(id, { relations: ['role'] });
+    return await this.usersDAO.findById(id);
   }
 
   async findAll(): Promise<User[]> {
-    const allUsers: User[] = await this.usersRepository.find({
-      relations: ['role'],
-    });
+    const allUsers: User[] = await this.usersDAO.find();
     allUsers.forEach((user) => {
       user.password = undefined;
     });
@@ -49,7 +42,7 @@ export class UsersService implements IUsersService {
   async saveUser(user: User): Promise<User> {
     const hashedPassword: string = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
-    return await this.usersRepository.save(user);
+    return await this.usersDAO.save(user);
   }
 
   async saveUnregisteredUser(user: User): Promise<User> {
@@ -58,7 +51,7 @@ export class UsersService implements IUsersService {
       throw new HttpException('User exists!', 400);
     }
     try {
-      const unregisteredUser: User = await this.usersRepository.save(user);
+      const unregisteredUser: User = await this.usersDAO.save(user);
       return unregisteredUser;
     } catch (e) {
       throw new HttpException('Bad credentials!', 400);
@@ -72,14 +65,20 @@ export class UsersService implements IUsersService {
     }
     const hashedPassword: string = await bcrypt.hash(user.password, 10);
     user.password = hashedPassword;
-    const result: UpdateResult = await this.usersRepository.update(
-      userFound.id,
-      user,
-    );
-    return await this.findById(userFound.id);
+    try {
+      await this.usersDAO.update(userFound.id, user);
+      return await this.findById(userFound.id);
+    } catch (e) {
+      throw new HttpException('Cannot update user!', 400);
+    }
   }
 
-  async removeUser(id: number): Promise<DeleteResult> {
-    return this.usersRepository.delete(id);
+  async removeUser(id: number): Promise<User> {
+    const userFound = await this.findById(id);
+    if (!userFound || id === 1) {
+      throw new HttpException('User not found!', 400);
+    }
+    await this.usersDAO.delete(id);
+    return userFound;
   }
 }

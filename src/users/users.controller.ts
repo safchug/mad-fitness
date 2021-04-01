@@ -12,7 +12,6 @@ import {
   ParseIntPipe,
   Inject,
 } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
 import { IUsersService, USERS_SERVICE } from './users.service';
 import { User } from './interface/users.interface';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -66,9 +65,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   @Roles('admin')
-  async removeUser(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<DeleteResult> {
+  async removeUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return await this.usersService.removeUser(id);
   }
 }
