@@ -5,37 +5,37 @@ import { User } from '../users/interface/users.interface';
 import { UpdateResult, DeleteResult } from 'typeorm';
 
 export const USERS_DAO = 'USERS DAO';
-export interface IUsersDAO extends IRepository<UsersEntity> {
-  findOne(email: string): Promise<UsersEntity>;
-  findByFirstName(firstName: string): Promise<UsersEntity>;
-  save(user: User): Promise<UsersEntity>;
+export interface IUsersDAO extends IRepository<User> {
+  findByEmail(email: string): Promise<User>;
+  findByFirstName(firstName: string): Promise<User>;
+  save(user: User): Promise<User>;
   update(id: number, user: User): Promise<UpdateResult>;
   delete(id: number): Promise<DeleteResult>;
 }
 
 @Injectable()
 export class UsersDAO extends RepositoryDAO<UsersEntity> implements IUsersDAO {
-  async findByFirstName(firstName: string): Promise<UsersEntity> {
+  async findByFirstName(firstName: string): Promise<User> {
     const usersRepository = await this._getRepository(UsersEntity);
     return await usersRepository.findOne({ firstName });
   }
 
-  async findOne(email: string): Promise<UsersEntity> {
+  async findByEmail(email: string): Promise<User> {
     const usersRepository = await this._getRepository(UsersEntity);
     return await usersRepository.findOne({ email });
   }
 
-  async find(): Promise<UsersEntity[]> {
+  async find(): Promise<User[]> {
     const usersRepository = await this._getRepository(UsersEntity);
     return await usersRepository.find({ relations: ['role'] });
   }
 
-  async findById(id: number): Promise<UsersEntity> {
+  async findById(id: number): Promise<User> {
     const usersRepository = await this._getRepository(UsersEntity);
     return await usersRepository.findOne(id, { relations: ['role'] });
   }
 
-  async save(user: User): Promise<UsersEntity> {
+  async save(user: User): Promise<User> {
     const usersRepository = await this._getRepository(UsersEntity);
     return await usersRepository.save(user);
   }

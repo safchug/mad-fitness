@@ -15,7 +15,7 @@ export class RolesService implements IRolesService {
   constructor(@Inject(ROLES_DAO) private readonly rolesDAO: IRolesDAO) {}
 
   async findOne(role: string): Promise<Role | null> {
-    return await this.rolesDAO.findOne(role);
+    return await this.rolesDAO.findByRole(role);
   }
 
   async findById(id: number): Promise<Role | null> {

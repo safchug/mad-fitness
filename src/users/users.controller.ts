@@ -49,7 +49,7 @@ export class UsersController {
   @Post('new')
   @Roles('admin', 'trainer')
   async create(@Body() user: CreateUserDto): Promise<User> {
-    return await this.usersService.saveUnregisteredUser(user);
+    return await this.usersService.saveUser(user);
   }
 
   //@UseGuards(JwtAuthGuard)

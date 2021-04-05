@@ -10,7 +10,6 @@ export interface IUsersService {
   findById(id: number): Promise<User | null>;
   findAll(): Promise<User[]>;
   saveUser(user: User): Promise<User>;
-  saveUnregisteredUser(user: User): Promise<User>;
   updateUser(user: User): Promise<User>;
   removeUser(id: number): Promise<User>;
 }
@@ -24,7 +23,7 @@ export class UsersService implements IUsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.usersDAO.findOne(email);
+    return await this.usersDAO.findByEmail(email);
   }
 
   async findById(id: number): Promise<User | null> {
@@ -40,12 +39,6 @@ export class UsersService implements IUsersService {
   }
 
   async saveUser(user: User): Promise<User> {
-    const hashedPassword: string = await bcrypt.hash(user.password, 10);
-    user.password = hashedPassword;
-    return await this.usersDAO.save(user);
-  }
-
-  async saveUnregisteredUser(user: User): Promise<User> {
     const foundUser: User = await this.findByEmail(user.email);
     if (foundUser) {
       throw new HttpException('User exists!', 400);
