@@ -8,29 +8,30 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { RolesEntity } from '../../roles/entity/roles.entity';
+import { Role } from '../../roles/interface/roles.interface';
 
-@Entity({name:'users'})
+@Entity({ name: 'users' })
 export class UsersEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ name: 'first_name', type: 'varchar', length: 100 })
-  firstname: string;
+  firstName: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, select: false })
   password: string;
 
   @ManyToOne(() => RolesEntity)
   @JoinColumn({ name: 'role_id' })
-  roleId: number;
+  role: Role;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ unique: true, type: 'varchar', length: 100 })
   email: string;
 
   @Column({ name: 'last_name', type: 'varchar', length: 100 })
-  lastname: string;
+  lastName: string;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: false })
   active: boolean;
 
   @CreateDateColumn({

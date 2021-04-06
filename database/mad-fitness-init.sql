@@ -301,7 +301,7 @@ CREATE TABLE public.users (
     role_id integer,
     email character varying,
     last_name character varying,
-    active boolean DEFAULT true,
+    active boolean DEFAULT false,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
@@ -615,3 +615,5 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
+INSERT INTO public.roles (role) VALUES ('admin'), ('trainer'), ('user');
+INSERT INTO public.users (first_name, password, role_id, email, last_name, active) VALUES ('Admin_firstname', '$2b$10$imxiCaHc4KuGZV0VJg0zge.ZsZmfalQjWnTgMUIK22yZBcB4hP4CW', 1, 'admin@madfitness.com', 'Admin_lastname', true);

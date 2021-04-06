@@ -1,20 +1,26 @@
 import {
-  Column,
   Entity,
   PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  Generated,
 } from 'typeorm';
+import { UsersEntity } from '../../users/entity/users.entity';
+import { InvitesEntity } from '../../invites/entity/invites.entity';
 
-@Entity({ name: 'invites' })
-export class InvitesEntity {
+@Entity({ name: 'users_invites' })
+export class UsersInvitesEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  @Generated('uuid')
-  invite: string;
+  @ManyToOne(() => UsersEntity)
+  @JoinColumn({ name: 'user_id' })
+  userId: number;
+
+  @ManyToOne(() => InvitesEntity)
+  @JoinColumn({ name: 'invite_id' })
+  inviteId: number;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -30,11 +36,4 @@ export class InvitesEntity {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
-
-  @CreateDateColumn({
-    type: 'timestamp',
-    name: 'expires_at',
-    default: () => "NOW() + INTERVAL '6 HOUR'",
-  })
-  expiresAt: Date;
 }
