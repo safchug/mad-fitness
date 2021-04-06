@@ -296,6 +296,7 @@ ALTER SEQUENCE public.schedule_users_id_seq OWNED BY public.schedule_users.id;
 
 CREATE TABLE public.users (
     id integer NOT NULL,
+<<<<<<< HEAD
     "roleId" integer,
     active boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone DEFAULT now(),
@@ -304,6 +305,16 @@ CREATE TABLE public.users (
     password character varying(100) NOT NULL,
     email character varying(100) NOT NULL,
     last_name character varying(100) NOT NULL
+=======
+    first_name character varying,
+    password character varying,
+    role_id integer,
+    email character varying,
+    last_name character varying,
+    active boolean DEFAULT false,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+>>>>>>> 4b2c84f6dbf79ff40135d214a6d309eda53e7245
 );
 
 
@@ -797,3 +808,5 @@ ALTER TABLE ONLY public.schedule_users
 --
 -- PostgreSQL database dump complete
 --
+INSERT INTO public.roles (role) VALUES ('admin'), ('trainer'), ('user');
+INSERT INTO public.users (first_name, password, role_id, email, last_name, active) VALUES ('Admin_firstname', '$2b$10$imxiCaHc4KuGZV0VJg0zge.ZsZmfalQjWnTgMUIK22yZBcB4hP4CW', 1, 'admin@madfitness.com', 'Admin_lastname', true);
