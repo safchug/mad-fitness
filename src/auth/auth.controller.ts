@@ -27,6 +27,7 @@ export class AuthController {
     @Body() body: LoginUserDto,
     @Request() req,
   ): Promise<TokenResponse> {
+    console.log(typeof req);
     return await this.authService.login(req.user);
   }
 
