@@ -7,6 +7,7 @@ export const USERS_SERVICE = 'USERS SERVICE';
 export interface IUsersService {
   findOne(firstName: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
+  findWithPassword(email: string): Promise<User | null>;
   findById(id: number): Promise<User | null>;
   findAll(): Promise<User[]>;
   saveUser(user: User): Promise<User>;
@@ -26,15 +27,16 @@ export class UsersService implements IUsersService {
     return await this.usersDAO.findByEmail(email);
   }
 
+  async findWithPassword(email: string): Promise<User | null> {
+    return await this.usersDAO.findWithPassword(email);
+  }
+
   async findById(id: number): Promise<User | null> {
     return await this.usersDAO.findById(id);
   }
 
   async findAll(): Promise<User[]> {
     const allUsers: User[] = await this.usersDAO.find();
-    allUsers.forEach((user) => {
-      user.password = undefined;
-    });
     return allUsers;
   }
 
@@ -60,10 +62,10 @@ export class UsersService implements IUsersService {
     user.password = hashedPassword;
     try {
       await this.usersDAO.update(userFound.id, user);
-      return await this.findById(userFound.id);
     } catch (e) {
-      throw new HttpException('Cannot update user!', 400);
+      throw new HttpException('Failed to update user!', 500);
     }
+    return await this.findById(userFound.id);
   }
 
   async removeUser(id: number): Promise<User> {

@@ -18,7 +18,7 @@ export class UsersEntity {
   @Column({ name: 'first_name', type: 'varchar', length: 100 })
   firstName: string;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 100, select: false })
   password: string;
 
   @ManyToOne(() => RolesEntity)

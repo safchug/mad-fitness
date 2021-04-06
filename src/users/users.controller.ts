@@ -28,7 +28,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  //@Roles('admin', 'trainer')
+  @Roles('admin', 'trainer')
   async findAll(): Promise<User[]> {
     return await this.usersService.findAll();
   }
@@ -38,8 +38,8 @@ export class UsersController {
   @Roles('admin', 'trainer')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
     try {
-      const { password, ...withoutPass } = await this.usersService.findById(id);
-      return withoutPass;
+      const user: User = await this.usersService.findById(id);
+      return user;
     } catch (e) {
       throw new HttpException('Bad userId!', 400);
     }

@@ -44,7 +44,7 @@ export class AuthService implements IAuthService {
   ) {}
 
   public async validateUser(email: string, password: string): Promise<User> {
-    const user: User = await this.usersService.findByEmail(email);
+    const user: User = await this.usersService.findWithPassword(email);
     if (!user || !user.active) {
       return null;
     }
@@ -54,8 +54,7 @@ export class AuthService implements IAuthService {
     );
     if (user && passwordMatch && user.active) {
       const userData: User = await this.usersService.findById(user.id);
-      const { password, ...result } = userData;
-      return result;
+      return userData;
     }
     return null;
   }
