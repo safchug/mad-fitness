@@ -12,7 +12,7 @@ import {
 } from '../refreshTokens/refreshTokens.service';
 import { RefreshToken } from '../refreshTokens/interface/refreshTokens.interface';
 import { TokenExpiredError } from 'jsonwebtoken';
-import { jwtConstants } from './constants';
+import { jwtConstants } from '../config/constantsJWT';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import {

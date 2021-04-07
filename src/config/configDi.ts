@@ -1,13 +1,13 @@
-import { UsersService, USERS_SERVICE } from './users/users.service';
-import { RolesService, ROLES_SERVICE } from './roles/roles.service';
-import { AuthService, AUTH_SERVICE } from './auth/auth.service';
+import { UsersService, USERS_SERVICE } from '../users/users.service';
+import { RolesService, ROLES_SERVICE } from '../roles/roles.service';
+import { AuthService, AUTH_SERVICE } from '../auth/auth.service';
 import {
   RefreshTokensService,
   REFRESH_TOKENS_SERVICE,
-} from './refreshTokens/refreshTokens.service';
-import { RolesDAO, ROLES_DAO } from './DAO/rolesDAO';
-import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from './DAO/refreshTokensDAO';
-import { USERS_DAO, UsersDAO } from './DAO/usersDAO';
+} from '../refreshTokens/refreshTokens.service';
+import { RolesDAO, ROLES_DAO } from '../DAO/rolesDAO';
+import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
+import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
 
 export const usersService = {
   useClass: UsersService,

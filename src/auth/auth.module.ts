@@ -6,10 +6,10 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import { jwtConstants } from '../config/constantsJWT';
 import { RolesGuard } from './roles.guard';
 import { AuthController } from './auth.controller';
-import { authService } from '../configDi';
+import { authService } from '../config/configDi';
 
 @Module({
   imports: [
