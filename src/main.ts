@@ -7,11 +7,15 @@ import {
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { configApp } from './config/configApp';
+import { FitnessLoggerService } from './logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
+    {
+      logger: new FitnessLoggerService(),
+    },
   );
 
   app.useGlobalPipes(
