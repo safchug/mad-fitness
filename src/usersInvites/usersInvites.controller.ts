@@ -9,6 +9,6 @@ export class UsersInvitesController {
 
   @Post()
   createAndSendInvate(@Body() user: UserDataDto): Promise<UserResponseDto> {
-    return this.userIviteService.createAndSendInvate(user);
+    return this.userIviteService.sendInvite(user);
   }
 }

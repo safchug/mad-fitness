@@ -24,7 +24,7 @@ export class UsersEntity {
   @ManyToOne(() => RolesEntity, (role) => role.id, {
     cascade: true,
   })
-  role: RolesEntity;
+  role: Role;
 
   @Column({ unique: true, type: 'varchar', length: 100 })
   email: string;

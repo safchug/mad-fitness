@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { getConnection, getRepository } from 'typeorm';
+import { getConnection, getRepository, UpdateResult } from 'typeorm';
 import { UsersInvitesEntity } from './entity/usersInvites.entity';
 import { UsersEntity } from '../users/entity/users.entity';
 import { InvitesEntity } from '../invites/entity/invites.entity';
@@ -22,14 +22,12 @@ import { Role } from '../roles/interface/roles.interface';
 export const USERS_INVIES_SERVICE = 'USERS INVIES SERVICE';
 
 export interface IUsersInvitesService {
-  sendInvite(userData: UserDataDto): UserResponseDto;
-  makeUserInvite(): UsersInvitesEntity;
+  sendInvite(userData: UserDataDto): Promise<UserResponseDto>;
+  makeUserInvite(userData: UserDataDto): Promise<UsersInvitesEntity>;
   getUserIfExists(email: string): Promise<User>;
-  saveUser(userData: UserDataDto): UsersEntity;
-  specifyRole(id: number): Role;
-  updateUserIvite(userData: UserDataDto): UsersInvitesEntity;
-  saveInvite(userData: UserDataDto): InvitesEntity;
-  saveUserInvite(): UsersInvitesEntity;
+  makeUser(userData: UserDataDto): Promise<User>;
+  specifyRole(id: number): Promise<Role>;
+  updateUserIvite(user: User): Promise<UsersInvitesEntity>;
 }
 
 @Injectable()
@@ -43,98 +41,104 @@ export class UsersInvitesService implements IUsersInvitesService {
     @Inject(USERS_INVITES_DAO) private usersInvitesDAO: IUsersInvitesDAO,
   ) {}
 
-  async createAndSendInvate(data: UserDataDto): Promise<any> {
-    let message = {};
-    const connection = getConnection();
-    const queryRunner = connection.createQueryRunner();
-
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      const userInvite = await this.createIvite(data);
-
-      const result = await queryRunner.manager.save(userInvite);
-
-      const { user } = result;
-
-      const token = this.jwtService.sign({
-        email: data.email,
-        userId: user.id,
-      });
-
-      await this.emailService.sendInvite(
-        { name: data.firstName, email: data.email },
-        token,
-      );
-
-      await queryRunner.commitTransaction();
-
-      message = { message: 'SUCCESS' };
-    } catch (err) {
-      await queryRunner.rollbackTransaction();
-      message = { message: 'FAILURE', err };
-    } finally {
-      await queryRunner.release();
-    }
-    return message;
-  }
-
-  private async createIvite(data: UserDataDto): Promise<UsersInvitesEntity> {
-    const user = new UsersEntity();
-    user.firstName = data.firstName;
-    user.lastName = data.lastName;
-    user.email = data.email;
-    user.password = 'secret';
-    const roleRepository = getRepository(RolesEntity);
-    const role = await roleRepository.findOne({ role: data.role });
-    user.role = role;
-    const invite = new InvitesEntity();
-    const now = new Date();
-    //TODO: raise time duration in props of the method
-    const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    invite.expiresAt = expiresAt;
-    const userInvite = new UsersInvitesEntity();
-    userInvite.invite = invite;
-    userInvite.user = user;
-    return userInvite;
-  }
-
   getUserIfExists(email: string): Promise<User> {
     return this.usersDAO.findByEmail(email);
   }
 
-  makeUserInvite(): UsersInvitesEntity {
-    return undefined;
+  async makeUserInvite(userData: UserDataDto): Promise<UsersInvitesEntity> {
+    const userInvite = new UsersInvitesEntity();
+
+    const user: User = await this.makeUser(userData);
+
+    const invite = new InvitesEntity();
+
+    const now = new Date();
+    //TODO: raise time duration in props of the method
+    const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    invite.expiresAt = expiresAt;
+
+    await this.invitesDAO.save(invite);
+
+    userInvite.invite = invite;
+    return this.usersInvitesDAO.save(userInvite);
   }
 
-  saveUser(userData: UserDataDto): UsersEntity {
-    return undefined;
+  async makeUser(userData: UserDataDto): Promise<User> {
+    const newUser = new UsersEntity();
+    newUser.email = userData.email;
+    newUser.firstName = userData.firstName;
+    newUser.lastName = userData.lastName;
+    newUser.role = await this.specifyRole(userData.roleId);
+    return this.usersDAO.save(newUser);
   }
 
-  saveUserInvite(userData: UserDataDto): UsersInvitesEntity {
-    return undefined;
-  }
-
-  async sendInvite(userData: UserDataDto): UserResponseDto {
+  async sendInvite(userData: UserDataDto): Promise<UserResponseDto> {
     const user = await this.getUserIfExists(userData.email);
     let userInvite;
-    if (user) {
-      userInvite = await this.updateUserIvite(user);
-    } else {
-      userInvite = await this.makeUserInvite(userData);
+    try {
+      if (user) {
+        userInvite = await this.updateUserIvite(user);
+      } else {
+        userInvite = await this.makeUserInvite(userData);
+      }
+
+      const { invite } = userInvite;
+
+      const token = this.jwtService.sign({
+        email: user.email,
+        userId: user.id,
+        invite,
+      });
+
+      await this.emailService.sendInvite(
+        { name: user.firstName, email: user.email },
+        token,
+      );
+    } catch (err) {
+      console.log(err);
+      return { message: 'FAILURE', err };
     }
+
+    return { message: 'SUCCESS' };
   }
 
   async specifyRole(id: number): Promise<Role> {
     const role: Role = await this.rolesDAO.findById(id);
 
     if (!role)
-      throw new HttpException('Bad request data', HttpStatus.BAD_REQUEST);
+      throw new HttpException('roleId is required', HttpStatus.BAD_REQUEST);
 
     return role;
   }
 
-  async updateUserIvite(userData: UserDataDto): UsersInvitesEntity {
-    return this.invitesDAO.update();
+  async updateUserIvite(user: User): Promise<UsersInvitesEntity> {
+    let userInvite;
+    let invite;
+
+    try {
+      userInvite = await this.usersInvitesDAO.findByUser(user);
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      invite = new InvitesEntity();
+      const now = new Date();
+      //TODO: raise time duration in props of the method
+      const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      invite.expiresAt = expiresAt;
+      await this.invitesDAO.save(invite);
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      userInvite.invite = invite;
+      this.usersInvitesDAO.update(userInvite.id, userInvite);
+    } catch (err) {
+      console.log(err);
+    }
+
+    return this.usersInvitesDAO.findById(userInvite.id);
   }
 }

@@ -26,6 +26,4 @@ export class InvitesDAO
     const invitesRepository = await this._getRepository(InvitesEntity);
     return invitesRepository.findOne(id);
   }
-
-  async update();
 }
