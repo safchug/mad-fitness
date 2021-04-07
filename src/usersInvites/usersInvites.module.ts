@@ -5,6 +5,13 @@ import { JwtModule } from '@nestjs/jwt';
 import 'dotenv/config';
 import { EmailModule } from '../email/email.module';
 import { UsersInvitesEntity } from './entity/usersInvites.entity';
+import {
+  invitesDAO,
+  rolesDAO,
+  usersDAO,
+  usersInvitesDAO,
+  usersInvitesService,
+} from '../configDi';
 
 @Module({
   imports: [
@@ -15,7 +22,13 @@ import { UsersInvitesEntity } from './entity/usersInvites.entity';
       signOptions: { expiresIn: '1w' },
     }),
   ],
-  providers: [UsersInvitesService],
+  providers: [
+    usersInvitesService,
+    invitesDAO,
+    usersInvitesDAO,
+    usersDAO,
+    rolesDAO,
+  ],
   exports: [TypeOrmModule, JwtModule],
 })
 export class UsersInvitesModule {}

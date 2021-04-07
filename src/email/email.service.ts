@@ -2,8 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import User from './user.interface';
 
+export const EMAIL_SERVICE = 'EMAIL SERVICE';
+
+export interface IEmailService {
+  sendInvite(user: User, token: string);
+}
+
 @Injectable()
-export class EmailService {
+export class EmailService implements IEmailService {
   constructor(private mailService: MailerService) {}
 
   sendInvite(user: User, token: string) {
