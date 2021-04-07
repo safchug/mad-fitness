@@ -1,4 +1,10 @@
-import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Logger,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from './interface/users.interface';
 import { USERS_DAO, IUsersDAO } from '../DAO/usersDAO';
@@ -19,6 +25,8 @@ export interface IUsersService {
 @Injectable()
 export class UsersService implements IUsersService {
   constructor(@Inject(USERS_DAO) private readonly usersDAO: IUsersDAO) {}
+
+  private readonly logger = new Logger(UsersService.name);
 
   async findOne(firstName: string): Promise<User | null> {
     return await this.usersDAO.findByFirstName(firstName);
@@ -44,20 +52,26 @@ export class UsersService implements IUsersService {
   async saveUser(user: User): Promise<User> {
     const foundUser: User = await this.findByEmail(user.email);
     if (foundUser) {
-      throw new HttpException('User exists!', 400);
+      const errorMessage = 'User exists!';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, 400);
     }
     try {
       const unregisteredUser: User = await this.usersDAO.save(user);
       return unregisteredUser;
     } catch (e) {
-      throw new HttpException('Bad credentials!', 400);
+      const errorMessage = 'Bad credentials!';
+      this.logger.error(errorMessage, e);
+      throw new HttpException(errorMessage, 400);
     }
   }
 
   async updateUser(user: User): Promise<User> {
     const userFound: User = await this.findByEmail(user.email); //then check invite for expire and if exists by user.id from invites repository,
     if (!userFound) {
-      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+      const errorMessage = 'User Not Found';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, HttpStatus.NOT_FOUND);
     }
     const hashedPassword: string = await bcrypt.hash(
       user.password,
@@ -67,7 +81,9 @@ export class UsersService implements IUsersService {
     try {
       await this.usersDAO.update(userFound.id, user);
     } catch (e) {
-      throw new HttpException('Failed to update user!', 500);
+      const errorMessage = 'Failed to update user!';
+      this.logger.error(errorMessage, e);
+      throw new HttpException(errorMessage, 500);
     }
     return await this.findById(userFound.id);
   }
@@ -75,7 +91,9 @@ export class UsersService implements IUsersService {
   async removeUser(id: number): Promise<User> {
     const userFound = await this.findById(id);
     if (!userFound || id === 1) {
-      throw new HttpException('User not found!', 400);
+      const errorMessage = 'User Not Found';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, 400);
     }
     await this.usersDAO.delete(id);
     return userFound;
