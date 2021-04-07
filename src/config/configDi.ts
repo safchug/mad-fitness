@@ -4,17 +4,17 @@ import { AuthService, AUTH_SERVICE } from '../auth/auth.service';
 import {
   RefreshTokensService,
   REFRESH_TOKENS_SERVICE,
-} from './refreshTokens/refreshTokens.service';
-import { RolesDAO, ROLES_DAO } from './DAO/rolesDAO';
-import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from './DAO/refreshTokensDAO';
-import { USERS_DAO, UsersDAO } from './DAO/usersDAO';
-import { EMAIL_SERVICE, EmailService } from './email/email.service';
+} from '../refreshTokens/refreshTokens.service';
+import { RolesDAO, ROLES_DAO } from '../DAO/rolesDAO';
+import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
+import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
+import { EMAIL_SERVICE, EmailService } from '../email/email.service';
 import {
   USERS_INVIES_SERVICE,
   UsersInvitesService,
-} from './usersInvites/usersInvites.service';
-import { USERS_INVITES_DAO, UsersInvitesDAO } from './DAO/usersInvitesDAO';
-import { INVITES_DAO, InvitesDAO } from './DAO/invitesDAO';
+} from '../usersInvites/usersInvites.service';
+import { USERS_INVITES_DAO, UsersInvitesDAO } from '../DAO/usersInvitesDAO';
+import { INVITES_DAO, InvitesDAO } from '../DAO/invitesDAO';
 
 export const usersService = {
   useClass: UsersService,
