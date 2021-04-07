@@ -4,7 +4,7 @@ import { UsersService, USERS_SERVICE } from './users.service';
 import { UsersEntity } from './entity/users.entity';
 import { UsersController } from './users.controller';
 import { AuthModule } from '../auth/auth.module';
-import { usersService, usersDAO } from '../configDi';
+import { usersService, usersDAO } from '../config/configDi';
 
 @Module({
   imports: [

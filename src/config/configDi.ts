@@ -1,6 +1,6 @@
-import { UsersService, USERS_SERVICE } from './users/users.service';
-import { RolesService, ROLES_SERVICE } from './roles/roles.service';
-import { AuthService, AUTH_SERVICE } from './auth/auth.service';
+import { UsersService, USERS_SERVICE } from '../users/users.service';
+import { RolesService, ROLES_SERVICE } from '../roles/roles.service';
+import { AuthService, AUTH_SERVICE } from '../auth/auth.service';
 import {
   RefreshTokensService,
   REFRESH_TOKENS_SERVICE,

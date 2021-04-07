@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from './interface/users.interface';
 import { USERS_DAO, IUsersDAO } from '../DAO/usersDAO';
+import { configApp } from '../config/configApp';
 
 export const USERS_SERVICE = 'USERS SERVICE';
 export interface IUsersService {
@@ -58,7 +59,10 @@ export class UsersService implements IUsersService {
     if (!userFound) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
-    const hashedPassword: string = await bcrypt.hash(user.password, 10);
+    const hashedPassword: string = await bcrypt.hash(
+      user.password,
+      configApp.saltRounds,
+    );
     user.password = hashedPassword;
     try {
       await this.usersDAO.update(userFound.id, user);
