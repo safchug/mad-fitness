@@ -10,8 +10,6 @@ import { ClassesModule } from './classes/classes.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './usersInvites/usersInvites.module';
-import { UsersInvitesService } from './usersInvites/usersInvites.service';
-import { UsersInvitesController } from './usersInvites/usersInvites.controller';
 import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 
@@ -29,7 +27,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot(),
     EmailModule,
   ],
-  controllers: [AppController, UsersInvitesController],
-  providers: [AppService, UsersInvitesService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -28,12 +28,12 @@ export class UsersInvitesDAO
 
   async findById(id: number): Promise<UsersInvitesEntity> {
     const invitesRepository = await this._getRepository(UsersInvitesEntity);
-    return invitesRepository.findOne(id);
+    return invitesRepository.findOne(id, { relations: ['user'] });
   }
 
   async findByUser(user: User): Promise<UsersInvitesEntity> {
     const invitesRepository = await this._getRepository(UsersInvitesEntity);
-    return invitesRepository.findOne({ user });
+    return invitesRepository.findOne({ user }, { relations: ['user'] });
   }
 
   async update(

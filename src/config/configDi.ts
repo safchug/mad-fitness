@@ -10,7 +10,7 @@ import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
 import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
 import { EMAIL_SERVICE, EmailService } from '../email/email.service';
 import {
-  USERS_INVIES_SERVICE,
+  USERS_INVITES_SERVICE,
   UsersInvitesService,
 } from '../usersInvites/usersInvites.service';
 import { USERS_INVITES_DAO, UsersInvitesDAO } from '../DAO/usersInvitesDAO';
@@ -67,6 +67,6 @@ export const mailService = {
 };
 
 export const usersInvitesService = {
-  provide: USERS_INVIES_SERVICE,
+  provide: USERS_INVITES_SERVICE,
   useClass: UsersInvitesService,
 };

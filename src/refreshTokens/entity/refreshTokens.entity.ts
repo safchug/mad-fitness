@@ -14,10 +14,9 @@ export class RefreshTokensEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UsersEntity, (user) => user.id, {
-    cascade: true,
-  })
-  user: UsersEntity;
+  @ManyToOne(() => UsersEntity)
+  @JoinColumn({ name: 'user_id' })
+  userId: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   token: string;

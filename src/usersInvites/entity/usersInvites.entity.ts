@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UsersEntity } from '../../users/entity/users.entity';
 import { InvitesEntity } from '../../invites/entity/invites.entity';
+import { User } from '../../users/interface/users.interface';
 
 @Entity({ name: 'users_invites' })
 export class UsersInvitesEntity {
@@ -17,11 +18,13 @@ export class UsersInvitesEntity {
   @ManyToOne(() => UsersEntity, (user) => user.id, {
     cascade: true,
   })
-  user: UsersEntity;
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @ManyToOne(() => InvitesEntity, (invite) => invite.id, {
     cascade: true,
   })
+  @JoinColumn({ name: 'invite_id' })
   invite: InvitesEntity;
 
   @CreateDateColumn({

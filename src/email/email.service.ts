@@ -29,8 +29,8 @@ export class EmailService implements IEmailService {
   }
 
   private makeUrl(token: string): string {
-    const HOST = process.env.HOST;
-    const PORT = process.env.PORT;
+    const HOST = process.env.HOST || '127.0.0.1';
+    const PORT = process.env.PORT || '3000';
     const PROTOCOL = process.env.INVITE_PROTOCOL || 'http';
     return `${PROTOCOL}://${HOST}:${PORT}/auth/confirm?token=${token}`;
   }

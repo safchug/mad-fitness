@@ -49,7 +49,7 @@ export class UsersDAO extends RepositoryDAO<UsersEntity> implements IUsersDAO {
 
   async save(user: User): Promise<User> {
     const usersRepository = await this._getRepository(UsersEntity);
-    return await usersRepository.save(user);
+    return usersRepository.save(user);
   }
 
   async update(id: number, user: User): Promise<UpdateResult> {

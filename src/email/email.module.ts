@@ -4,6 +4,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import 'dotenv/config';
+import { mailService } from '../config/configDi';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import 'dotenv/config';
       },
     }),
   ],
-  providers: [EmailService],
-  exports: [EmailService],
+  providers: [mailService],
+  exports: [mailService],
 })
 export class EmailModule {}
