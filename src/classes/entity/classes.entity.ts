@@ -21,17 +21,16 @@ export class ClassesEntity {
   max: number;
 
   @CreateDateColumn({
+    nullable: true,
     name: 'created_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
+    select: false,
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    nullable: true,
     name: 'updated_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
+    select: false,
   })
   updatedAt: Date;
 }

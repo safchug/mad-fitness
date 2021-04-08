@@ -5,6 +5,7 @@ import {
   RefreshTokensService,
   REFRESH_TOKENS_SERVICE,
 } from '../refreshTokens/refreshTokens.service';
+import { CLASSES_SERVICE, ClassesService } from '../classes/classes.service';
 import { RolesDAO, ROLES_DAO } from '../DAO/rolesDAO';
 import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
 import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
@@ -15,6 +16,7 @@ import {
 } from '../usersInvites/usersInvites.service';
 import { USERS_INVITES_DAO, UsersInvitesDAO } from '../DAO/usersInvitesDAO';
 import { INVITES_DAO, InvitesDAO } from '../DAO/invitesDAO';
+import { CLASSES_DAO, ClassesDAO } from '../DAO/classesDAO';
 
 export const usersService = {
   useClass: UsersService,
@@ -34,6 +36,11 @@ export const authService = {
 export const refreshTokensService = {
   useClass: RefreshTokensService,
   provide: REFRESH_TOKENS_SERVICE,
+};
+
+export const classesService = {
+  useClass: ClassesService,
+  provide: CLASSES_SERVICE,
 };
 
 export const rolesDAO = {
@@ -69,4 +76,9 @@ export const mailService = {
 export const usersInvitesService = {
   provide: USERS_INVITES_SERVICE,
   useClass: UsersInvitesService,
+};
+
+export const classesDAO = {
+  useClass: ClassesDAO,
+  provide: CLASSES_DAO,
 };
