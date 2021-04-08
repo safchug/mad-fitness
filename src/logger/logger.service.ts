@@ -1,27 +1,28 @@
 import { Injectable, LoggerService } from '@nestjs/common';
 import * as pinoLogger from 'pino';
-const pino = pinoLogger({
-  prettyPrint: true,
-});
 
 @Injectable()
 export class FitnessLoggerService implements LoggerService {
+  private pino = pinoLogger({
+    prettyPrint: true,
+  });
+
   private getMessage(message: any, context?: string) {
     return context ? `[ ${context} ] ${message}` : message;
   }
 
   error(message: any, trace?: string, context?: string): any {
-    pino.error(this.getMessage(message, context));
+    this.pino.error(this.getMessage(message, context));
     if (trace) {
-      pino.error(trace);
+      this.pino.error(trace);
     }
   }
 
   log(message: any, context?: string): any {
-    pino.info(this.getMessage(message, context));
+    this.pino.info(this.getMessage(message, context));
   }
 
   warn(message: any, context?: string): any {
-    pino.warn(this.getMessage(message, context));
+    this.pino.warn(this.getMessage(message, context));
   }
 }

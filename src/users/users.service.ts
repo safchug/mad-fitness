@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './interface/users.interface';
 import { USERS_DAO, IUsersDAO } from '../DAO/usersDAO';
 import { configApp } from '../config/configApp';
+import { FitnessLoggerService } from '../logger/logger.service';
 
 export const USERS_SERVICE = 'USERS SERVICE';
 export interface IUsersService {
@@ -24,9 +25,10 @@ export interface IUsersService {
 
 @Injectable()
 export class UsersService implements IUsersService {
-  constructor(@Inject(USERS_DAO) private readonly usersDAO: IUsersDAO) {}
-
-  private readonly logger = new Logger(UsersService.name);
+  constructor(
+    @Inject(USERS_DAO) private readonly usersDAO: IUsersDAO,
+    private readonly logger: FitnessLoggerService,
+  ) {}
 
   async findOne(firstName: string): Promise<User | null> {
     return await this.usersDAO.findByFirstName(firstName);

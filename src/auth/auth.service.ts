@@ -21,6 +21,7 @@ import {
   RefreshTokenPayload,
   TokenResponse,
 } from './interface/auth.interface';
+import { FitnessLoggerService } from '../logger/logger.service';
 
 export const AUTH_SERVICE = 'AUTH SERVICE';
 export interface IAuthService {
@@ -42,9 +43,8 @@ export class AuthService implements IAuthService {
     private readonly refreshTokensService: IRefreshTokensService,
     @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
     private jwtService: JwtService,
+    private readonly logger: FitnessLoggerService,
   ) {}
-
-  private readonly logger = new Logger(AuthService.name);
 
   public async validateUser(email: string, password: string): Promise<User> {
     const user: User = await this.usersService.findWithPassword(email);
