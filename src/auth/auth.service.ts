@@ -21,7 +21,10 @@ import {
   RefreshTokenPayload,
   TokenResponse,
 } from './interface/auth.interface';
-import { FitnessLoggerService } from '../logger/logger.service';
+import {
+  FITNESS_LOGGER_SERVICE,
+  FitnessLoggerService,
+} from '../logger/logger.service';
 
 export const AUTH_SERVICE = 'AUTH SERVICE';
 export interface IAuthService {
@@ -41,10 +44,14 @@ export class AuthService implements IAuthService {
   constructor(
     @Inject(REFRESH_TOKENS_SERVICE)
     private readonly refreshTokensService: IRefreshTokensService,
-    @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
-    private jwtService: JwtService,
+    @Inject(USERS_SERVICE)
+    private readonly usersService: IUsersService,
+    @Inject(FITNESS_LOGGER_SERVICE)
     private readonly logger: FitnessLoggerService,
-  ) {}
+    private jwtService: JwtService,
+  ) {
+    this.logger.setContext('AuthService');
+  }
 
   public async validateUser(email: string, password: string): Promise<User> {
     const user: User = await this.usersService.findWithPassword(email);

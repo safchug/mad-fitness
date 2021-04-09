@@ -8,6 +8,10 @@ import {
 import { RolesDAO, ROLES_DAO } from '../DAO/rolesDAO';
 import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
 import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
+import {
+  FitnessLoggerService,
+  FITNESS_LOGGER_SERVICE,
+} from '../logger/logger.service';
 
 export const usersService = {
   useClass: UsersService,
@@ -42,4 +46,9 @@ export const refreshTokensDAO = {
 export const usersDAO = {
   useClass: UsersDAO,
   provide: USERS_DAO,
+};
+
+export const fitnessLoggerService = {
+  useClass: FitnessLoggerService,
+  provide: FITNESS_LOGGER_SERVICE,
 };
