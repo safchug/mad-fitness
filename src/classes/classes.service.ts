@@ -1,6 +1,10 @@
 import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { Class } from './interface/classes.interface';
 import { CLASSES_DAO, IClassesDAO } from '../DAO/classesDAO';
+import {
+  FITNESS_LOGGER_SERVICE,
+  FitnessLoggerService,
+} from '../logger/logger.service';
 
 export const CLASSES_SERVICE = 'CLASSES SERVICE';
 export interface IClassesService {
@@ -14,7 +18,13 @@ export interface IClassesService {
 
 @Injectable()
 export class ClassesService implements IClassesService {
-  constructor(@Inject(CLASSES_DAO) private readonly classesDAO: IClassesDAO) {}
+  constructor(
+    @Inject(CLASSES_DAO) private readonly classesDAO: IClassesDAO,
+    @Inject(FITNESS_LOGGER_SERVICE)
+    private readonly logger: FitnessLoggerService,
+  ) {
+    this.logger.setContext('ClassesService');
+  }
 
   async findByLabel(label: string): Promise<Class | null> {
     return await this.classesDAO.findByLabel(label);
@@ -35,12 +45,16 @@ export class ClassesService implements IClassesService {
   async updateClass(id: number, clas: Class): Promise<Class> {
     const classFound: Class = await this.findById(id);
     if (!classFound) {
-      throw new HttpException('Class Not Found', HttpStatus.NOT_FOUND);
+      const errorMessage = 'Class Not Found!';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, HttpStatus.NOT_FOUND);
     }
     try {
       await this.classesDAO.update(id, clas);
     } catch (e) {
-      throw new HttpException('Failed to update Class!', 500);
+      const errorMessage = 'Failed to update Class!';
+      this.logger.error(errorMessage, e);
+      throw new HttpException(errorMessage, 500);
     }
     return await this.findById(classFound.id);
   }
@@ -48,7 +62,9 @@ export class ClassesService implements IClassesService {
   async removeClass(id: number): Promise<Class> {
     const classFound = await this.findById(id);
     if (!classFound) {
-      throw new HttpException('Class not found!', 400);
+      const errorMessage = 'Class not found!';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, 400);
     }
     await this.classesDAO.delete(id);
     return classFound;

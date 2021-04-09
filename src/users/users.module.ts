@@ -5,9 +5,11 @@ import { UsersEntity } from './entity/users.entity';
 import { UsersController } from './users.controller';
 import { AuthModule } from '../auth/auth.module';
 import { usersService, usersDAO } from '../config/configDi';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
+    LoggerModule,
     forwardRef(() => AuthModule), //circular module dependency forwardRef(() => AuthModule)
     TypeOrmModule.forFeature([UsersEntity]),
   ],

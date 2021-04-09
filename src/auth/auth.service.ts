@@ -3,6 +3,7 @@ import {
   Injectable,
   HttpException,
   Inject,
+  Logger,
 } from '@nestjs/common';
 import { IUsersService, USERS_SERVICE } from '../users/users.service';
 import { User } from '../users/interface/users.interface';
@@ -20,6 +21,10 @@ import {
   RefreshTokenPayload,
   TokenResponse,
 } from './interface/auth.interface';
+import {
+  FITNESS_LOGGER_SERVICE,
+  FitnessLoggerService,
+} from '../logger/logger.service';
 
 export const AUTH_SERVICE = 'AUTH SERVICE';
 export interface IAuthService {
@@ -39,9 +44,14 @@ export class AuthService implements IAuthService {
   constructor(
     @Inject(REFRESH_TOKENS_SERVICE)
     private readonly refreshTokensService: IRefreshTokensService,
-    @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
+    @Inject(USERS_SERVICE)
+    private readonly usersService: IUsersService,
+    @Inject(FITNESS_LOGGER_SERVICE)
+    private readonly logger: FitnessLoggerService,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    this.logger.setContext('AuthService');
+  }
 
   public async validateUser(email: string, password: string): Promise<User> {
     const user: User = await this.usersService.findWithPassword(email);
@@ -64,9 +74,13 @@ export class AuthService implements IAuthService {
       await this.jwtService.verifyAsync(token);
     } catch (e) {
       if (e instanceof TokenExpiredError) {
-        throw new HttpException(`token expired`, 401); //UnauthorizedException();
+        const errorMessage = 'token expired';
+        this.logger.error(errorMessage);
+        throw new HttpException(errorMessage, 401); //UnauthorizedException();
       } else {
-        throw new HttpException(`token not valid`, 401);
+        const errorMessage = 'token not valid';
+        this.logger.error(errorMessage, e);
+        throw new HttpException(errorMessage, 401);
       }
     }
   }
@@ -102,9 +116,13 @@ export class AuthService implements IAuthService {
       return this.jwtService.verifyAsync(token);
     } catch (e) {
       if (e instanceof TokenExpiredError) {
-        throw new UnprocessableEntityException('Refresh token expired');
+        const errorMessage = 'Refresh token expired';
+        this.logger.error(errorMessage);
+        throw new UnprocessableEntityException(errorMessage);
       } else {
-        throw new UnprocessableEntityException('Refresh token malformed');
+        const errorMessage = 'Refresh token malformed';
+        this.logger.error(errorMessage, e);
+        throw new UnprocessableEntityException(errorMessage);
       }
     }
   }
@@ -114,7 +132,9 @@ export class AuthService implements IAuthService {
   ): Promise<User> {
     const subId: number = payload.sub;
     if (!subId) {
-      throw new UnprocessableEntityException('Refresh token malformed');
+      const errorMessage = 'Refresh token malformed';
+      this.logger.error(errorMessage);
+      throw new UnprocessableEntityException(errorMessage);
     }
     return this.usersService.findById(subId);
   }
@@ -123,7 +143,9 @@ export class AuthService implements IAuthService {
     const payload: RefreshTokenPayload = await this.decodeRefreshToken(encoded);
     const user: User = await this.getUserFromRefreshTokenPayload(payload);
     if (!user) {
-      throw new UnprocessableEntityException('Refresh token malformed');
+      const errorMessage = 'Refresh token malformed';
+      this.logger.error(errorMessage);
+      throw new UnprocessableEntityException(errorMessage);
     }
     return user;
   }
@@ -138,7 +160,9 @@ export class AuthService implements IAuthService {
       refresh,
     );
     if (!user || !foundInDb) {
-      throw new UnprocessableEntityException('Refresh token malformed');
+      const errorMessage = 'Refresh token malformed';
+      this.logger.error(errorMessage);
+      throw new UnprocessableEntityException(errorMessage);
     }
     const token: string = await this.generateAccessToken(user);
     return token;

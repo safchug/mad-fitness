@@ -11,6 +11,7 @@ import { ScheduleModule } from './schedule/schedule.module';
 import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './usersInvites/usersInvites.module';
 import { AuthModule } from './auth/auth.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
     InvitesModule,
     UsersInvitesModule,
     TypeOrmModule.forRoot(),
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
