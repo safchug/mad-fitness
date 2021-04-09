@@ -10,9 +10,11 @@ import { jwtConstants } from '../config/constantsJWT';
 import { RolesGuard } from './roles.guard';
 import { AuthController } from './auth.controller';
 import { authService } from '../config/configDi';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
   imports: [
+    LoggerModule,
     forwardRef(() => UsersModule),
     PassportModule,
     RefreshTokensModule,
