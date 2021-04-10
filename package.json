@@ -13,7 +13,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --cache --cache-location 'node_modules/.cache/.eslintcache'",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -100,7 +100,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --cache --fix",
+      "eslint --cache --fix --cache-location 'node_modules/.cache/.eslintcache'",
       "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
     ]
   }
