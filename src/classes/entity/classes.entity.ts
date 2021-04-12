@@ -11,7 +11,7 @@ export class ClassesEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @Column({ name: 'label' })
+  @Column({ name: 'label', unique: true })
   label: string;
 
   @Column({ name: 'description' })
