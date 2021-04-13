@@ -8,6 +8,7 @@ import {
 
 export const CLASSES_SERVICE = 'CLASSES SERVICE';
 export interface IClassesService {
+  findClass(id: Class): Promise<Class>;
   findByLabel(label: string): Promise<Class | null>;
   findById(id: number): Promise<Class | null>;
   findAll(): Promise<Class[]>;
@@ -32,6 +33,10 @@ export class ClassesService implements IClassesService {
 
   async findById(id: number): Promise<Class | null> {
     return await this.classesDAO.findById(id);
+  }
+
+  async findClass(id: Class): Promise<Class> {
+    return await this.classesDAO.findClass(id);
   }
 
   async findAll(): Promise<Class[]> {

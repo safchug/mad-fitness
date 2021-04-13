@@ -37,12 +37,14 @@ export class UsersEntity {
   @CreateDateColumn({
     nullable: true,
     name: 'created_at',
+    select: false,
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     nullable: true,
     name: 'updated_at',
+    select: false,
   })
   updatedAt: Date;
 }
