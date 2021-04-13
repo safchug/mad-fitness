@@ -9,17 +9,21 @@ import {
 } from 'typeorm';
 import { UsersEntity } from '../../users/entity/users.entity';
 import { ClassesEntity } from '../../classes/entity/classes.entity';
+import { User } from '../../users/interface/users.interface';
+import { Class } from '../../classes/interface/classes.interface';
 
 @Entity({ name: 'schedule' })
 export class ScheduleEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @ManyToOne(() => UsersEntity, (usersEntity) => usersEntity.id)
-  trainer: UsersEntity;
+  @ManyToOne(() => UsersEntity)
+  @JoinColumn({ name: 'trainer_id' })
+  trainer: User;
 
-  @ManyToOne(() => ClassesEntity, (classesEntity) => classesEntity.id)
-  class: ClassesEntity;
+  @ManyToOne(() => ClassesEntity)
+  @JoinColumn({ name: 'class_id' })
+  class: Class;
 
   @Column({ name: 'description' })
   description: string;
@@ -34,17 +38,14 @@ export class ScheduleEntity {
   endDate: Date;
 
   @CreateDateColumn({
+    nullable: true,
     name: 'created_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
+    nullable: true,
     name: 'updated_at',
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP(6)',
-    onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
 }

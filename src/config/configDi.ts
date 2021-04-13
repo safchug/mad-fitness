@@ -6,6 +6,10 @@ import {
   REFRESH_TOKENS_SERVICE,
 } from '../refreshTokens/refreshTokens.service';
 import { CLASSES_SERVICE, ClassesService } from '../classes/classes.service';
+import {
+  SCHEDULE_SERVICE,
+  ScheduleService,
+} from '../schedule/schedule.service';
 import { RolesDAO, ROLES_DAO } from '../DAO/rolesDAO';
 import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
 import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
@@ -14,6 +18,7 @@ import {
   FITNESS_LOGGER_SERVICE,
 } from '../logger/logger.service';
 import { CLASSES_DAO, ClassesDAO } from '../DAO/classesDAO';
+import { SCHEDULE_DAO, ScheduleDAO } from '../DAO/scheduleDAO';
 
 export const usersService = {
   useClass: UsersService,
@@ -40,6 +45,11 @@ export const classesService = {
   provide: CLASSES_SERVICE,
 };
 
+export const scheduleService = {
+  useClass: ScheduleService,
+  provide: SCHEDULE_SERVICE,
+};
+
 export const rolesDAO = {
   useClass: RolesDAO,
   provide: ROLES_DAO,
@@ -63,4 +73,9 @@ export const fitnessLoggerService = {
 export const classesDAO = {
   useClass: ClassesDAO,
   provide: CLASSES_DAO,
+};
+
+export const scheduleDAO = {
+  useClass: ScheduleDAO,
+  provide: SCHEDULE_DAO,
 };

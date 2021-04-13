@@ -17,7 +17,7 @@ export class ClassesEntity {
   @Column({ name: 'description' })
   description: string;
 
-  @Column({ name: 'max_person' })
+  @Column({ name: 'max_persons' })
   max: number;
 
   @CreateDateColumn({
