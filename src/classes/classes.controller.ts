@@ -40,7 +40,7 @@ export class ClassesController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Result - fined class by id.' })
   @ApiResponse({ status: 401, description: 'You must log in!' })
-  @ApiResponse({ status: 400, description: 'Such class does not exist.' })
+  @ApiResponse({ status: 404, description: 'Such class does not exist.' })
   @Roles('admin', 'trainer')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<Class> {
     return await this.classesService.findById(id);
@@ -66,7 +66,7 @@ export class ClassesController {
     status: 200,
     description: 'The class has been successfully updated.',
   })
-  @ApiResponse({ status: 400, description: 'Such class does not exist.' })
+  @ApiResponse({ status: 404, description: 'Such class does not exist.' })
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @Roles('admin')
   async registerUser(
@@ -83,7 +83,7 @@ export class ClassesController {
     status: 200,
     description: 'The class has been successfully deleted.',
   })
-  @ApiResponse({ status: 400, description: 'Such class does not exist.' })
+  @ApiResponse({ status: 404, description: 'Such class does not exist.' })
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @Roles('admin')
   async removeUser(@Param('id', ParseIntPipe) id: number): Promise<Class> {

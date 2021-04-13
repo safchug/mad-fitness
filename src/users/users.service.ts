@@ -48,7 +48,7 @@ export class UsersService implements IUsersService {
     if (!userFound) {
       const errorMessage = 'User Not Found';
       this.logger.error(errorMessage);
-      throw new HttpException(errorMessage, 400);
+      throw new HttpException(errorMessage, 404);
     }
     return userFound;
   }
@@ -102,7 +102,7 @@ export class UsersService implements IUsersService {
     if (!userFound || id === 1) {
       const errorMessage = 'User Not Found';
       this.logger.error(errorMessage);
-      throw new HttpException(errorMessage, 400);
+      throw new HttpException(errorMessage, 404);
     }
     await this.usersDAO.delete(id);
     return userFound;

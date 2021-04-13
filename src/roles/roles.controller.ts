@@ -38,6 +38,7 @@ export class RolesController {
   @ApiBearerAuth('access-token')
   @ApiResponse({ status: 200, description: 'Result - fined role by id.' })
   @ApiResponse({ status: 401, description: 'You must log in!' })
+  @ApiResponse({ status: 404, description: 'Such role does not exist.' })
   @Roles('admin')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<Role> {
     return await this.rolesService.findById(id);

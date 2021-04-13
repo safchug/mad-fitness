@@ -35,7 +35,7 @@ export class ClassesService implements IClassesService {
     if (!classFound) {
       const errorMessage = 'Class Not Found';
       this.logger.error(errorMessage);
-      throw new HttpException(errorMessage, 400);
+      throw new HttpException(errorMessage, 404);
     }
     return classFound;
   }
@@ -70,7 +70,7 @@ export class ClassesService implements IClassesService {
     if (!classFound) {
       const errorMessage = 'Class not found!';
       this.logger.error(errorMessage);
-      throw new HttpException(errorMessage, 400);
+      throw new HttpException(errorMessage, 404);
     }
     await this.classesDAO.delete(id);
     return classFound;
