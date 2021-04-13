@@ -47,12 +47,6 @@ export class UsersController {
   @Roles('admin', 'trainer')
   async getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return await this.usersService.findById(id);
-    // try {
-    //   const user: User = await this.usersService.findById(id);
-    //   return user;
-    // } catch (e) {
-    //   throw new HttpException('Bad userId!', 404);
-    // }
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
