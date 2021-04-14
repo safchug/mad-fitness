@@ -11,6 +11,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   Inject,
+  Redirect,
 } from '@nestjs/common';
 import { IUsersService, USERS_SERVICE } from './users.service';
 import { User } from './interface/users.interface';

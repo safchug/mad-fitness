@@ -5,6 +5,7 @@ import {
   Put,
   Delete,
   Body,
+  Query,
   Param,
   UseGuards,
   ParseIntPipe,
@@ -16,6 +17,7 @@ import { Schedule } from './interface/schedule.interface';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { CreateScheduleDto } from './dto/createSchedule.dto';
+import { SearchParamsDto } from './dto/searchParams.dto';
 
 @Controller('schedule')
 export class ScheduleController {
@@ -27,8 +29,9 @@ export class ScheduleController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @Roles('admin', 'trainer')
-  async findAll(): Promise<Schedule[]> {
-    return await this.scheduleService.findAll();
+  async findAll(@Query() dto: SearchParamsDto): Promise<Schedule[]> {
+    console.log('GET query:', dto);
+    return await this.scheduleService.findAll(dto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

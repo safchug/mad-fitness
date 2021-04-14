@@ -7,11 +7,12 @@ import {
   FITNESS_LOGGER_SERVICE,
   FitnessLoggerService,
 } from '../logger/logger.service';
+import { ISearchParams } from './interface/searchParams.interface';
 
 export const SCHEDULE_SERVICE = 'SCHEDULE SERVICE';
 export interface IScheduleService {
   findById(id: number): Promise<Schedule | null>;
-  findAll(): Promise<Schedule[]>;
+  findAll(options?: ISearchParams): Promise<Schedule[]>;
   saveSchedule(schedule: Schedule): Promise<Schedule>;
   updateSchedule(id: number, schedule: Schedule): Promise<Schedule>;
   removeSchedule(id: number): Promise<Schedule>;
@@ -34,7 +35,18 @@ export class ScheduleService implements IScheduleService {
     return await this.scheduleDAO.findById(id);
   }
 
-  async findAll(): Promise<Schedule[]> {
+  async findAll(options?: ISearchParams): Promise<Schedule[]> {
+    const index = Object.keys(options).length;
+    if (index) {
+      //console.log('Service options: ', options, 'trainer:', options.trainer);
+      const tr = options.trainer;
+      if (tr) {
+        //console.log('finding', tr)
+        options.trainer = await this.usersService.findUser(tr);
+      }
+      //console.log('Service after found: ', options);
+      return await this.scheduleDAO.findByFilters(options);
+    }
     return await this.scheduleDAO.find();
   }
 

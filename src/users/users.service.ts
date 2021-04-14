@@ -7,6 +7,7 @@ import {
   FITNESS_LOGGER_SERVICE,
   FitnessLoggerService,
 } from '../logger/logger.service';
+import { UsersEntity } from './entity/users.entity';
 
 export const USERS_SERVICE = 'USERS SERVICE';
 export interface IUsersService {
@@ -20,6 +21,7 @@ export interface IUsersService {
   removeUser(id: number): Promise<User>;
   isActive(id: User): Promise<boolean>;
   isTrainer(id: User): Promise<boolean>;
+  findUser(id: User): Promise<User>;
 }
 
 @Injectable()
@@ -118,5 +120,10 @@ export class UsersService implements IUsersService {
       return true;
     }
     return false;
+  }
+  async findUser(id: User): Promise<User> {
+    const userFound = await this.usersDAO.findUser(id);
+
+    return userFound;
   }
 }
