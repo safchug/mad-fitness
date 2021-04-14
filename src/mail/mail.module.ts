@@ -8,16 +8,18 @@ import { MAIL_SERVICE } from './mail.service';
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: process.env.MAIL_HOST,
-        // port: process.env.MAIL_PORT,
+        host: process.env.MAIL_HOST || 'smtp.gmail.com',
         secure: false,
+        service: 'gmail',
         auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASSWORD,
+          user: process.env.MAIL_USER || 'fitness.addmin@gmail.com',
+          pass: process.env.MAIL_PASSWORD || 'Red12345!',
         },
       },
       defaults: {
-        from: `"No Reply" <${process.env.MAIL_FROM}>`,
+        from:
+          `"No Reply" <${process.env.MAIL_USER}>` ||
+          `"No Reply" <fitness.addmin@gmail.com>`,
       },
       template: {
         dir: __dirname + '/templates', //join(__dirname, 'templates'), or  process.cwd() + '/templates/',

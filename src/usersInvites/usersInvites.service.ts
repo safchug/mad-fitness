@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from '../users/interface/users.interface';
+//import { User } from '../users/interface/users.interface';
+import { User } from '../mail/interface/user.interface';
 import {
   FITNESS_LOGGER_SERVICE,
   FitnessLoggerService,
@@ -15,9 +16,8 @@ import { INVITES_SERVICE, IInvitesService } from '../invites/invites.service';
 export const USERS_INVITES_SERVICE = 'USERS INVITES SERVICE';
 
 export interface IUsersInvitesService {
-  //sendInvite(userData: UserDataDto): Promise<UserResponseDto>;
   makeUserInvite(user: User): Promise<UserInvites>;
-  //makeUserInvite(inviteId: number, userId: number): Promise<User>;
+  sendInvite(user: User, token: string): Promise<UserInvites>;
 }
 
 // @Injectable()
@@ -36,7 +36,7 @@ export interface IUsersInvitesService {
 @Injectable()
 export class UsersInvitesService implements IUsersInvitesService {
   constructor(
-    @Inject(MAIL_SERVICE) private emailService: IMailService,
+    @Inject(MAIL_SERVICE) private mailService: IMailService,
     @Inject(USERS_SERVICE) private readonly usersService: IUsersService,
     @Inject(INVITES_SERVICE) private readonly invitesService: IInvitesService,
     @Inject(USERS_INVITES_DAO) private usersInvitesDAO: IUsersInvitesDAO,
@@ -60,45 +60,12 @@ export class UsersInvitesService implements IUsersInvitesService {
 
     userInvite.inviteId = invite.id;
     userInvite.userId = user.id;
-    return this.usersInvitesDAO.save(userInvite);
+    await this.usersInvitesDAO.save(userInvite);
+
+    return await this.sendInvite(user, invite.invite);
   }
 
-  // async sendInvite(userData: UserDataDto): Promise<UserResponseDto> {
-  //   const userThatExists = await this.getUserIfExists(userData.email);
-  //
-  //   let userInvite;
-  //   try {
-  //     if (userThatExists) {
-  //       if (userThatExists.active)
-  //         throw new HttpException(
-  //           'User already exists',
-  //           HttpStatus.BAD_REQUEST,
-  //         );
-  //       console.log('User exists');
-  //       userInvite = await this.updateUserIvite(userThatExists);
-  //     } else {
-  //       console.log('User doesn`t exist');
-  //       console.log('userData', userData);
-  //       userInvite = await this.makeUserInvite(userData);
-  //     }
-  //
-  //     const { user, invite } = userInvite;
-  //
-  //     const token = this.jwtService.sign({
-  //       email: user.email,
-  //       userId: user.id,
-  //       invite,
-  //     });
-  //
-  //     await this.emailService.sendInvite(
-  //       { name: user.firstName, email: user.email },
-  //       token,
-  //     );
-  //   } catch (err) {
-  //     console.log(err);
-  //     return { message: 'FAILURE', err };
-  //   }
-  //
-  //   return { message: 'SUCCESS' };
-  // }
+  async sendInvite(newUser: User, token: string): Promise<UserInvites> {
+    return await this.mailService.sendMail(newUser, token);
+  }
 }

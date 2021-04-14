@@ -1,6 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { User } from './user.interface';
+import { User } from './interface/user.interface';
 
 export const MAIL_SERVICE = 'EMAIL SERVICE';
 
@@ -17,14 +17,10 @@ export class MailService implements IMailService {
 
     await this.mailerService.sendMail({
       to: user.email,
-      // from: '"Support Team" <support@example.com>', // override default from
+      from: process.env.MAIL_USER, //'"Support Team" <support@example.com>', // override default from
       subject: 'Welcome to Mad fitness. Please continue your registration!',
       template: 'invite', // `.hbs` extension is appended automatically
-      context: {
-        // ✏️ filling curly brackets with content
-        name: user.name,
-        url,
-      },
+      context: { url },
     });
   }
 
