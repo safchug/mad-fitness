@@ -12,6 +12,7 @@ import { InvitesModule } from './invites/invites.module';
 import { UsersInvitesModule } from './usersInvites/usersInvites.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerModule } from './logger/logger.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LoggerModule } from './logger/logger.module';
     UsersInvitesModule,
     TypeOrmModule.forRoot(),
     LoggerModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

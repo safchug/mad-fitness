@@ -89,7 +89,7 @@ ALTER SEQUENCE public.classes_id_seq OWNED BY public.classes.id;
 CREATE TABLE public.invites (
     id integer NOT NULL,
     invite uuid DEFAULT gen_random_uuid() NOT NULL,
-    created_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     expires_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
