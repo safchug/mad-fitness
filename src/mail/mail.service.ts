@@ -1,8 +1,9 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { User } from './interface/user.interface';
+import { inviteConfig } from '../config/mail/invite/invite.config';
 
-export const MAIL_SERVICE = 'EMAIL SERVICE';
+export const MAIL_SERVICE = 'MAIL SERVICE';
 
 export interface IMailService {
   sendMail(user: User, token: string);
@@ -18,16 +19,16 @@ export class MailService implements IMailService {
     await this.mailerService.sendMail({
       to: user.email,
       from: process.env.MAIL_USER, //'"Support Team" <support@example.com>', // override default from
-      subject: 'Welcome to Mad fitness. Please continue your registration!',
-      template: 'invite', // `.hbs` extension is appended automatically
+      subject: inviteConfig.subject,
+      template: inviteConfig.template, // `.hbs` extension is appended automatically
       context: { url },
     });
   }
 
   private makeUrl(token: string): string {
-    const HOST = process.env.HOST || '127.0.0.1';
-    const PORT = process.env.PORT || '3000';
-    const PROTOCOL = process.env.INVITE_PROTOCOL || 'http';
+    const HOST = inviteConfig.HOST || '127.0.0.1';
+    const PORT = inviteConfig.PORT || '3000';
+    const PROTOCOL = inviteConfig.PROTOCOL || 'http';
     return `${PROTOCOL}://${HOST}:${PORT}/auth/confirm?token=${token}`;
   }
 }

@@ -22,8 +22,8 @@ import { MAIL_SERVICE } from './mail.service';
           `"No Reply" <fitness.addmin@gmail.com>`,
       },
       template: {
-        dir: __dirname + '/templates', //join(__dirname, 'templates'), or  process.cwd() + '/templates/',
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        dir: 'src/config/mail/invite/templates',
+        adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
         },

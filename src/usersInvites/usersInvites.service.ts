@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-//import { User } from '../users/interface/users.interface';
 import { User } from '../mail/interface/user.interface';
 import {
   FITNESS_LOGGER_SERVICE,
@@ -19,19 +18,6 @@ export interface IUsersInvitesService {
   makeUserInvite(user: User): Promise<UserInvites>;
   sendInvite(user: User, token: string): Promise<UserInvites>;
 }
-
-// @Injectable()
-// export class UsersInvitesService {
-//   constructor(private mailService: MailService) {}
-//
-//   async signUp(user: User) {
-//     const token = Math.floor(1000 + Math.random() * 9000).toString();
-//     // create user in db
-//     // ...
-//     // send confirmation mail
-//     await this.mailService.sendUserConfirmation(user, token);
-//   }
-// }
 
 @Injectable()
 export class UsersInvitesService implements IUsersInvitesService {

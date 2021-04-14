@@ -1,5 +1,3 @@
-import { Role } from '../../roles/interface/roles.interface';
-
 export interface UserInvites {
   id?: number;
   inviteId: number;
