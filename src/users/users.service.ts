@@ -18,6 +18,8 @@ export interface IUsersService {
   saveUser(user: User): Promise<User>;
   updateUser(user: User): Promise<User>;
   removeUser(id: number): Promise<User>;
+  isActive(id: User): Promise<boolean>;
+  isTrainer(id: User): Promise<boolean>;
 }
 
 @Injectable()
@@ -100,5 +102,21 @@ export class UsersService implements IUsersService {
     }
     await this.usersDAO.delete(id);
     return userFound;
+  }
+
+  async isActive(id: User): Promise<boolean> {
+    const userFound = await this.usersDAO.findUser(id);
+    if (userFound && userFound.active) {
+      return true;
+    }
+    return false;
+  }
+
+  async isTrainer(id: User): Promise<boolean> {
+    const userFound = await this.usersDAO.findUser(id);
+    if (userFound && userFound.role.role === 'trainer') {
+      return true;
+    }
+    return false;
   }
 }

@@ -33,21 +33,21 @@ export class ClassesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   @Roles('admin', 'trainer')
-  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<Class> {
+  async getClassById(@Param('id', ParseIntPipe) id: number): Promise<Class> {
     return await this.classesService.findById(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @Roles('admin')
-  async create(@Body() clas: CreateClassesDto): Promise<Class> {
+  async createClass(@Body() clas: CreateClassesDto): Promise<Class> {
     return await this.classesService.saveClass(clas);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   @Roles('admin')
-  async registerUser(
+  async updateClass(
     @Body() clas: CreateClassesDto,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Class> {
@@ -57,7 +57,7 @@ export class ClassesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   @Roles('admin')
-  async removeUser(@Param('id', ParseIntPipe) id: number): Promise<Class> {
+  async removeClass(@Param('id', ParseIntPipe) id: number): Promise<Class> {
     return await this.classesService.removeClass(id);
   }
 }

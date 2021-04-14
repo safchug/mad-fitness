@@ -6,6 +6,7 @@ import { UpdateResult, DeleteResult } from 'typeorm';
 
 export const USERS_DAO = 'USERS DAO';
 export interface IUsersDAO extends IRepository<User> {
+  findUser(id: User): Promise<User>;
   findByEmail(email: string): Promise<User>;
   findWithPassword(email: string): Promise<User>;
   findByFirstName(firstName: string): Promise<User>;
@@ -43,6 +44,11 @@ export class UsersDAO extends RepositoryDAO<UsersEntity> implements IUsersDAO {
   }
 
   async findById(id: number): Promise<User> {
+    const usersRepository = await this._getRepository(UsersEntity);
+    return await usersRepository.findOne(id, { relations: ['role'] });
+  }
+
+  async findUser(id: User): Promise<User> {
     const usersRepository = await this._getRepository(UsersEntity);
     return await usersRepository.findOne(id, { relations: ['role'] });
   }

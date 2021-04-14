@@ -1,5 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { AuthService, AUTH_SERVICE } from './auth.service';
+import { AUTH_SERVICE } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { RefreshTokensModule } from '../refreshTokens/refreshTokens.module';
 import { PassportModule } from '@nestjs/passport';
