@@ -28,6 +28,6 @@ export class UsersInvitesController {
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @Roles('admin')
   createAndSendInvate(@Body() user: CreateUserDto): Promise<UserInvites> {
-    return this.userInvitesService.makeUserInvite(user);
+    return this.userInvitesService.createAndSendUserInvite(user);
   }
 }
