@@ -2,7 +2,16 @@ import { IRepository, RepositoryDAO } from './repositoryDAO';
 import { Injectable } from '@nestjs/common';
 import { ScheduleEntity } from '../schedule/entity/schedule.entity';
 import { Schedule } from '../schedule/interface/schedule.interface';
-import { UpdateResult, DeleteResult, Raw, Not, MoreThan } from 'typeorm';
+import {
+  UpdateResult,
+  DeleteResult,
+  Raw,
+  Not,
+  MoreThan,
+  Between,
+  MoreThanOrEqual,
+  Like,
+} from 'typeorm';
 import { ISearchParams } from '../schedule/interface/searchParams.interface';
 
 export const SCHEDULE_DAO = 'SCHEDULE DAO';
@@ -25,18 +34,26 @@ export class ScheduleDAO
 
   async findByFilters(options: ISearchParams): Promise<Schedule[]> {
     const scheduleRepository = await this._getRepository(ScheduleEntity);
-    //    const dat = options.byDate ? options.byDate : Date.now();
+    const dat = options.byDate;
     const train = options.trainer;
+    const time = options.byTime;
+    const fromDate = new Date(dat);
+    const untilDate = new Date(dat);
+    untilDate.setDate(fromDate.getDate() + 1); //1 day
+    const searchParams = {
+      trainer: train,
+      startDate: Between(fromDate, untilDate),
+    };
+    if (!train) {
+      delete searchParams.trainer;
+    }
+    if (!dat) {
+      delete searchParams.startDate;
+    }
+    console.log('search by:', searchParams);
     const found: Schedule[] = await scheduleRepository.find({
       relations: ['trainer', 'class'],
-      where: [
-        {
-          trainer: train,
-        },
-        {
-          trainer: { id: MoreThan(1) },
-        },
-      ],
+      where: [searchParams],
     });
     return found;
   }
