@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from '../mail/interface/user.interface';
 import {
   FITNESS_LOGGER_SERVICE,
@@ -7,8 +7,6 @@ import {
 import { MAIL_SERVICE, IMailService } from '../mail/mail.service';
 import { IUsersInvitesDAO, USERS_INVITES_DAO } from '../DAO/usersInvitesDAO';
 import { USERS_SERVICE, IUsersService } from '../users/users.service';
-import { UsersInvitesEntity } from './entity/usersInvites.entity';
-import { InvitesEntity } from '../invites/entity/invites.entity';
 import { UserInvites } from './interface/userInvites.interface';
 import { INVITES_SERVICE, IInvitesService } from '../invites/invites.service';
 import { inviteConfig } from '../config/mail/invite/invite.config';
@@ -20,7 +18,8 @@ export interface IUsersInvitesService {
   createAndSendUserInvite(user: User): Promise<UserInvites>;
   sendInvite(user: User, token: string): Promise<UserInvites>;
   createInvite(expiresAt: Date): Promise<Invite>;
-  createUserInvite(inviteId: number, userId: number): Promise<UserInvites>;
+  createUserInvite(userInvite: UserInvites): Promise<UserInvites>;
+  updateUserInvite(userInvite: UserInvites): Promise<UserInvites>;
 }
 
 @Injectable()
@@ -41,7 +40,7 @@ export class UsersInvitesService implements IUsersInvitesService {
 
     const invite = await this.createInvite(inviteConfig.expiresAt);
 
-    const userInvite = await this.createUserInvite(invite.id, user.id);
+    await this.createUserInvite({ inviteId: invite.id, userId: user.id });
 
     return await this.sendInvite(user, invite.invite);
   }
@@ -51,18 +50,50 @@ export class UsersInvitesService implements IUsersInvitesService {
   }
 
   async createInvite(expiresAt: Date): Promise<Invite> {
-    const invite: InvitesEntity = new InvitesEntity();
-    invite.expiresAt = expiresAt;
-    return await this.invitesService.saveInvite(invite);
+    return await this.invitesService.saveInvite(expiresAt);
   }
 
-  async createUserInvite(
-    inviteId: number,
-    userId: number,
-  ): Promise<UserInvites> {
-    const userInvite: UsersInvitesEntity = new UsersInvitesEntity();
-    userInvite.inviteId = inviteId;
-    userInvite.userId = userId;
-    return await this.usersInvitesDAO.save(userInvite);
+  async createUserInvite(userInvite: UserInvites): Promise<UserInvites> {
+    const foundUserInvite: UserInvites = await this.findByUserId(
+      userInvite.userId,
+    );
+    if (foundUserInvite) {
+      return await this.updateUserInvite(userInvite);
+    } else {
+      return await this.usersInvitesDAO.save(userInvite);
+    }
+  }
+
+  async findByUserId(id: number): Promise<UserInvites | null> {
+    return await this.usersInvitesDAO.findByUserId(id);
+  }
+
+  async findById(id: number): Promise<UserInvites | null> {
+    const userInviteFound = await this.usersInvitesDAO.findById(id);
+    if (!userInviteFound) {
+      const errorMessage = 'User Invite Not Found';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, 404);
+    }
+    return userInviteFound;
+  }
+
+  async updateUserInvite(userInvite: UserInvites): Promise<UserInvites> {
+    const userInviteFound: UserInvites = await this.findByUserId(
+      userInvite.userId,
+    );
+    if (!userInvite) {
+      const errorMessage = 'User Invite Not Found';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, HttpStatus.NOT_FOUND);
+    }
+    try {
+      await this.usersInvitesDAO.update(userInviteFound.id, userInvite);
+    } catch (e) {
+      const errorMessage = 'Failed to update user invite!';
+      this.logger.error(errorMessage, e);
+      throw new HttpException(errorMessage, 500);
+    }
+    return await this.findById(userInviteFound.id);
   }
 }

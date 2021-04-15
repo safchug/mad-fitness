@@ -6,7 +6,7 @@ export const INVITES_SERVICE = 'INVITES SERVICE';
 export interface IInvitesService {
   findById(id: number): Promise<Invite | null>;
   findAll(): Promise<Invite[]>;
-  saveInvite(invite: Invite): Promise<Invite>;
+  saveInvite(expiresAt: Date): Promise<Invite>;
 }
 
 @Injectable()
@@ -25,7 +25,7 @@ export class InvitesService implements IInvitesService {
     return allInvites;
   }
 
-  async saveInvite(invite: Invite): Promise<Invite> {
-    return await this.inviteDAO.save(invite);
+  async saveInvite(expiresAt: Date): Promise<Invite> {
+    return await this.inviteDAO.save({ expiresAt: expiresAt });
   }
 }

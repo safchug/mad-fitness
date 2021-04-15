@@ -3,5 +3,5 @@ export interface Invite {
   invite?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  expiresAt?: Date;
+  expiresAt: Date;
 }
