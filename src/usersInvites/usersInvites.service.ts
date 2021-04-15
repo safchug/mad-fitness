@@ -11,6 +11,7 @@ import { UsersInvitesEntity } from './entity/usersInvites.entity';
 import { InvitesEntity } from '../invites/entity/invites.entity';
 import { UserInvites } from './interface/userInvites.interface';
 import { INVITES_SERVICE, IInvitesService } from '../invites/invites.service';
+import { inviteConfig } from '../config/mail/invite/invite.config';
 
 export const USERS_INVITES_SERVICE = 'USERS INVITES SERVICE';
 
@@ -38,10 +39,7 @@ export class UsersInvitesService implements IUsersInvitesService {
 
     await this.usersService.saveUser(user);
 
-    const now = new Date();
-    const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-    invite.expiresAt = expiresAt;
-
+    invite.expiresAt = inviteConfig.expiresAt;
     await this.invitesService.saveInvite(invite);
 
     userInvite.inviteId = invite.id;
