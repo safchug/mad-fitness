@@ -34,10 +34,10 @@ export class UsersInvitesService implements IUsersInvitesService {
   }
 
   async makeUserInvite(user: User): Promise<UserInvites> {
+    await this.usersService.saveUser(user);
+
     const userInvite: UsersInvitesEntity = new UsersInvitesEntity();
     const invite: InvitesEntity = new InvitesEntity();
-
-    await this.usersService.saveUser(user);
 
     invite.expiresAt = inviteConfig.expiresAt;
     await this.invitesService.saveInvite(invite);

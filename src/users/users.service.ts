@@ -61,9 +61,15 @@ export class UsersService implements IUsersService {
   async saveUser(user: User): Promise<User> {
     const foundUser: User = await this.findByEmail(user.email);
     if (foundUser) {
-      const errorMessage = 'User exists!';
-      this.logger.error(errorMessage);
-      throw new HttpException(errorMessage, 400);
+      if (foundUser.active) {
+        const errorMessage = 'User exists and active!';
+        this.logger.error(errorMessage);
+        throw new HttpException(errorMessage, 400);
+      } else {
+        const errorMessage = 'User exists and not active!';
+        this.logger.warn(errorMessage);
+        return foundUser;
+      }
     }
     try {
       const unregisteredUser: User = await this.usersDAO.save(user);
