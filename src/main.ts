@@ -38,7 +38,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(configApp.appPort || 3000, configApp.appHost || '0.0.0.0');
+  await app.listen(configApp.appPort, configApp.appHost);
   console.log(`mad-fitness is running on: ${await app.getUrl()}`);
 }
 bootstrap();

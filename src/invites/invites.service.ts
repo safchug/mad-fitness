@@ -21,8 +21,7 @@ export class InvitesService implements IInvitesService {
   }
 
   async findAll(): Promise<Invite[]> {
-    const allInvites = await this.inviteDAO.find();
-    return allInvites;
+    return await this.inviteDAO.find();
   }
 
   async saveInvite(expiresAt: Date): Promise<Invite> {

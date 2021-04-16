@@ -1,11 +1,9 @@
 const now = new Date();
-const expires = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
+const expires = new Date(now.getTime() + parseInt(process.env.INVITE_EXPIRES));
 
 export const inviteConfig = {
-  subject: 'Welcome to Mad fitness. Please continue your registration!',
-  template: 'invite',
-  HOST: '127.0.0.1',
-  PORT: '3000',
-  PROTOCOL: 'http',
+  subject: process.env.MAIL_INVITE_SUBJECT,
+  template: process.env.MAIL_INVITE_TEMPLATE,
+  from: process.env.MAIL_USER,
   expiresAt: expires,
 };

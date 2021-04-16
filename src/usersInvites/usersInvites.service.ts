@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { User } from '../mail/interface/user.interface';
+import { UserInvite } from '../mail/interface/user.interface';
 import {
   FITNESS_LOGGER_SERVICE,
   FitnessLoggerService,
@@ -15,8 +15,8 @@ import { Invite } from '../invites/interface/invites.interface';
 export const USERS_INVITES_SERVICE = 'USERS INVITES SERVICE';
 
 export interface IUsersInvitesService {
-  createAndSendUserInvite(user: User): Promise<UserInvites>;
-  sendInvite(user: User, token: string): Promise<UserInvites>;
+  createAndSendUserInvite(user: UserInvite): Promise<UserInvites>;
+  sendInvite(user: UserInvite, token: string): Promise<UserInvites>;
   createInvite(expiresAt: Date): Promise<Invite>;
   createUserInvite(userInvite: UserInvites): Promise<UserInvites>;
   updateUserInvite(userInvite: UserInvites): Promise<UserInvites>;
@@ -35,8 +35,8 @@ export class UsersInvitesService implements IUsersInvitesService {
     this.logger.setContext('UsersInvitesService');
   }
 
-  async createAndSendUserInvite(newUser: User): Promise<UserInvites> {
-    const user = await this.usersService.saveUser(newUser);
+  async createAndSendUserInvite(newUser: UserInvite): Promise<UserInvites> {
+    const user = await this.createUser(newUser);
 
     const invite = await this.createInvite(inviteConfig.expiresAt);
 
@@ -45,12 +45,16 @@ export class UsersInvitesService implements IUsersInvitesService {
     return await this.sendInvite(user, invite.invite);
   }
 
-  async sendInvite(newUser: User, token: string): Promise<UserInvites> {
+  async sendInvite(newUser: UserInvite, token: string): Promise<UserInvites> {
     return await this.mailService.sendMail(newUser, token);
   }
 
   async createInvite(expiresAt: Date): Promise<Invite> {
     return await this.invitesService.saveInvite(expiresAt);
+  }
+
+  async createUser(newUser: UserInvite): Promise<UserInvite> {
+    return await this.usersService.saveUser(newUser);
   }
 
   async createUserInvite(userInvite: UserInvites): Promise<UserInvites> {
