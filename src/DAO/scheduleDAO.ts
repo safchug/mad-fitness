@@ -39,7 +39,7 @@ export class ScheduleDAO
     const tilDate = options.untilDate;
     const train = options.trainer;
     const time = options.byTime;
-    //const srtBy = options.sortBy;
+    const srtBy = options.sortBy;
     const srt = options.sort;
     const fromDate = new Date(frDate);
     const untilDate = new Date(tilDate);
@@ -51,8 +51,10 @@ export class ScheduleDAO
           `to_char(timestamp '${time}', 'HH24:MI') BETWEEN to_char(ScheduleEntity.startDate, 'HH24:MI') AND to_char(${alias}, 'HH24:MI')`,
       ),
     };
-    const oParams: OrderByCondition =
-      srt === 'ASC' ? { class: 'ASC' } : { class: 'DESC' };
+    const orderParams: OrderByCondition = {};
+    if (srt && srtBy) {
+      orderParams[srtBy] = srt === 'ASC' ? 'ASC' : 'DESC';
+    }
     if (!train) {
       delete searchParams.trainer;
     }
@@ -65,7 +67,7 @@ export class ScheduleDAO
     const found: Schedule[] = await scheduleRepository.find({
       relations: ['trainer', 'class'],
       where: [searchParams],
-      order: oParams,
+      order: orderParams,
     });
     return found;
   }

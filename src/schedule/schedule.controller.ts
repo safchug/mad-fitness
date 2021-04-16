@@ -30,7 +30,6 @@ export class ScheduleController {
   @Get()
   @Roles('admin', 'trainer')
   async findAll(@Query() dto: SearchParamsDto): Promise<Schedule[]> {
-    console.log('GET query:', dto);
     return await this.scheduleService.findAll(dto);
   }
 
