@@ -8,7 +8,8 @@ import {
 
 export const CLASSES_SERVICE = 'CLASSES SERVICE';
 export interface IClassesService {
-  findByLabel(role: string): Promise<Class | null>;
+  findClass(id: Class): Promise<Class>;
+  findByLabel(label: string): Promise<Class | null>;
   findById(id: number): Promise<Class | null>;
   findAll(): Promise<Class[]>;
   saveClass(clas: Class): Promise<Class>;
@@ -40,11 +41,21 @@ export class ClassesService implements IClassesService {
     return classFound;
   }
 
+  async findClass(id: Class): Promise<Class> {
+    return await this.classesDAO.findClass(id);
+  }
+
   async findAll(): Promise<Class[]> {
     return await this.classesDAO.find();
   }
 
   async saveClass(clas: Class): Promise<Class> {
+    const classFound: Class = await this.findByLabel(clas.label);
+    if (classFound) {
+      const errorMessage = 'Class with this label already exists!';
+      this.logger.error(errorMessage);
+      throw new HttpException(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
     return await this.classesDAO.save(clas);
   }
 

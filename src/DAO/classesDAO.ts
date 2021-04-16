@@ -6,6 +6,7 @@ import { UpdateResult, DeleteResult } from 'typeorm';
 
 export const CLASSES_DAO = 'CLASSES DAO';
 export interface IClassesDAO extends IRepository<Class> {
+  findClass(id: Class): Promise<Class>;
   findByLabel(label: string): Promise<Class>;
   save(clas: Class): Promise<Class>;
   update(id: number, clas: Class): Promise<UpdateResult>;
@@ -29,6 +30,11 @@ export class ClassesDAO
   async findById(id: number): Promise<Class> {
     const classesRepository = await this._getRepository(ClassesEntity);
     return await classesRepository.findOne({ id });
+  }
+
+  async findClass(id: Class): Promise<Class> {
+    const classesRepository = await this._getRepository(ClassesEntity);
+    return await classesRepository.findOne(id);
   }
 
   async save(clas: Class): Promise<Class> {
