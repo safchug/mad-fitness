@@ -11,6 +11,7 @@ import {
   Between,
   MoreThanOrEqual,
   Like,
+  OrderByCondition,
 } from 'typeorm';
 import { ISearchParams } from '../schedule/interface/searchParams.interface';
 
@@ -34,26 +35,47 @@ export class ScheduleDAO
 
   async findByFilters(options: ISearchParams): Promise<Schedule[]> {
     const scheduleRepository = await this._getRepository(ScheduleEntity);
-    const dat = options.byDate;
+    const frDate = options.fromDate;
+    const tilDate = options.untilDate;
     const train = options.trainer;
     const time = options.byTime;
-    const fromDate = new Date(dat);
-    const untilDate = new Date(dat);
-    untilDate.setDate(fromDate.getDate() + 1); //1 day
+    //const srtBy = options.sortBy;
+    const srt = options.sort;
+    const fromDate = new Date(frDate);
+    const untilDate = new Date(tilDate);
     const searchParams = {
       trainer: train,
       startDate: Between(fromDate, untilDate),
+      endDate: Raw(
+        (alias) =>
+          `to_char(timestamp '${time}', 'HH24:MI') BETWEEN to_char(ScheduleEntity.startDate, 'HH24:MI') AND to_char(${alias}, 'HH24:MI')`,
+      ),
     };
+    const orderParams: OrderByCondition =
+      srt === 'ASC' ? { class: 'ASC' } : { class: 'DESC' };
     if (!train) {
       delete searchParams.trainer;
     }
-    if (!dat) {
+    if (!frDate || !tilDate) {
       delete searchParams.startDate;
     }
+    if (!time) {
+      delete searchParams.endDate;
+    }
+    console.log(
+      'filter params: fromDate:',
+      frDate,
+      ' untilDate:',
+      tilDate,
+      ' time',
+      time,
+    );
+    console.log('sort params: ', orderParams);
     console.log('search by:', searchParams);
     const found: Schedule[] = await scheduleRepository.find({
       relations: ['trainer', 'class'],
       where: [searchParams],
+      order: orderParams,
     });
     return found;
   }

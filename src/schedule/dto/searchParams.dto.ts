@@ -1,5 +1,10 @@
 import { User } from '../../users/interface/users.interface';
-import { IsOptional, IsDateString, IsNumberString } from 'class-validator';
+import {
+  IsOptional,
+  IsDateString,
+  IsNumberString,
+  IsString,
+} from 'class-validator';
 
 export class SearchParamsDto {
   @IsOptional()
@@ -8,9 +13,21 @@ export class SearchParamsDto {
 
   @IsOptional()
   @IsDateString()
-  byDate: Date;
+  fromDate: Date;
+
+  @IsOptional()
+  @IsDateString()
+  untilDate: Date;
 
   @IsOptional()
   @IsDateString()
   byTime: Date;
+
+  @IsOptional()
+  @IsString()
+  sortBy: string;
+
+  @IsOptional()
+  @IsString()
+  sort: string;
 }

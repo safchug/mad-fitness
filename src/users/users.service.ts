@@ -123,7 +123,6 @@ export class UsersService implements IUsersService {
   }
   async findUser(id: User): Promise<User> {
     const userFound = await this.usersDAO.findUser(id);
-
     return userFound;
   }
 }
