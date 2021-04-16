@@ -51,7 +51,7 @@ export class ScheduleDAO
           `to_char(timestamp '${time}', 'HH24:MI') BETWEEN to_char(ScheduleEntity.startDate, 'HH24:MI') AND to_char(${alias}, 'HH24:MI')`,
       ),
     };
-    const orderParams: OrderByCondition =
+    const oParams: OrderByCondition =
       srt === 'ASC' ? { class: 'ASC' } : { class: 'DESC' };
     if (!train) {
       delete searchParams.trainer;
@@ -62,20 +62,10 @@ export class ScheduleDAO
     if (!time) {
       delete searchParams.endDate;
     }
-    console.log(
-      'filter params: fromDate:',
-      frDate,
-      ' untilDate:',
-      tilDate,
-      ' time',
-      time,
-    );
-    console.log('sort params: ', orderParams);
-    console.log('search by:', searchParams);
     const found: Schedule[] = await scheduleRepository.find({
       relations: ['trainer', 'class'],
       where: [searchParams],
-      order: orderParams,
+      order: oParams,
     });
     return found;
   }
