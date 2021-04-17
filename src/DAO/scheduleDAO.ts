@@ -64,6 +64,7 @@ export class ScheduleDAO
     if (!time) {
       delete searchParams.endDate;
     }
+    console.log(searchParams);
     const found: Schedule[] = await scheduleRepository.find({
       relations: ['trainer', 'class'],
       where: [searchParams],
