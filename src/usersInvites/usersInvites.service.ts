@@ -10,14 +10,12 @@ import { USERS_SERVICE, IUsersService } from '../users/users.service';
 import { UserInvites } from './interface/userInvites.interface';
 import { INVITES_SERVICE, IInvitesService } from '../invites/invites.service';
 import { inviteConfig } from '../config/mail/invite/invite.config';
-import { Invite } from '../invites/interface/invites.interface';
 
 export const USERS_INVITES_SERVICE = 'USERS INVITES SERVICE';
 
 export interface IUsersInvitesService {
-  createAndSendUserInvite(user: UserInvite): Promise<UserInvites>;
-  sendInvite(user: UserInvite, token: string): Promise<UserInvites>;
-  createInvite(expiresAt: Date): Promise<Invite>;
+  createAndSendUserInvite(userInvite: UserInvite): Promise<UserInvites>;
+  sendInvite(userInvite: UserInvite, token: string): Promise<UserInvites>;
   createUserInvite(userInvite: UserInvites): Promise<UserInvites>;
   updateUserInvite(userInvite: UserInvites): Promise<UserInvites>;
 }
@@ -35,33 +33,28 @@ export class UsersInvitesService implements IUsersInvitesService {
     this.logger.setContext('UsersInvitesService');
   }
 
-  async createAndSendUserInvite(newUser: UserInvite): Promise<UserInvites> {
-    const user = await this.createUser(newUser);
+  async createAndSendUserInvite(userInvite: UserInvite): Promise<UserInvites> {
+    const user = await this.usersService.saveUser(userInvite);
 
-    const invite = await this.createInvite(inviteConfig.expiresAt);
+    const invite = await this.invitesService.saveInvite(inviteConfig.expiresAt);
 
     await this.createUserInvite({ inviteId: invite.id, userId: user.id });
 
     return await this.sendInvite(user, invite.invite);
   }
 
-  async sendInvite(newUser: UserInvite, token: string): Promise<UserInvites> {
-    return await this.mailService.sendMail(newUser, token);
-  }
-
-  async createInvite(expiresAt: Date): Promise<Invite> {
-    return await this.invitesService.saveInvite(expiresAt);
-  }
-
-  async createUser(newUser: UserInvite): Promise<UserInvite> {
-    return await this.usersService.saveUser(newUser);
+  async sendInvite(
+    userInvite: UserInvite,
+    token: string,
+  ): Promise<UserInvites> {
+    return await this.mailService.sendMail(userInvite, token);
   }
 
   async createUserInvite(userInvite: UserInvites): Promise<UserInvites> {
-    const foundUserInvite: UserInvites = await this.findByUserId(
+    const existingUserInvite: UserInvites = await this.findByUserId(
       userInvite.userId,
     );
-    if (foundUserInvite) {
+    if (existingUserInvite) {
       return await this.updateUserInvite(userInvite);
     } else {
       return await this.usersInvitesDAO.save(userInvite);
@@ -73,31 +66,31 @@ export class UsersInvitesService implements IUsersInvitesService {
   }
 
   async findById(id: number): Promise<UserInvites | null> {
-    const userInviteFound = await this.usersInvitesDAO.findById(id);
-    if (!userInviteFound) {
+    const existingUserInvite = await this.usersInvitesDAO.findById(id);
+    if (!existingUserInvite) {
       const errorMessage = 'User Invite Not Found';
       this.logger.error(errorMessage);
       throw new HttpException(errorMessage, 404);
     }
-    return userInviteFound;
+    return existingUserInvite;
   }
 
   async updateUserInvite(userInvite: UserInvites): Promise<UserInvites> {
-    const userInviteFound: UserInvites = await this.findByUserId(
+    const existingUserInvite: UserInvites = await this.findByUserId(
       userInvite.userId,
     );
-    if (!userInvite) {
+    if (!existingUserInvite) {
       const errorMessage = 'User Invite Not Found';
       this.logger.error(errorMessage);
       throw new HttpException(errorMessage, HttpStatus.NOT_FOUND);
     }
     try {
-      await this.usersInvitesDAO.update(userInviteFound.id, userInvite);
+      await this.usersInvitesDAO.update(existingUserInvite.id, userInvite);
     } catch (e) {
       const errorMessage = 'Failed to update user invite!';
       this.logger.error(errorMessage, e);
       throw new HttpException(errorMessage, 500);
     }
-    return await this.findById(userInviteFound.id);
+    return await this.findById(existingUserInvite.id);
   }
 }

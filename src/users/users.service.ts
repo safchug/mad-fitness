@@ -44,13 +44,13 @@ export class UsersService implements IUsersService {
   }
 
   async findById(id: number): Promise<User | null> {
-    const userFound = await this.usersDAO.findById(id);
-    if (!userFound) {
+    const user = await this.usersDAO.findById(id);
+    if (!user) {
       const errorMessage = 'User Not Found';
       this.logger.error(errorMessage);
       throw new HttpException(errorMessage, 404);
     }
-    return userFound;
+    return user;
   }
 
   async findAll(): Promise<User[]> {
