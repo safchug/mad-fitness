@@ -20,10 +20,6 @@ export class SearchParamsDto {
   untilDate: Date;
 
   @IsOptional()
-  @IsDateString()
-  byTime: Date;
-
-  @IsOptional()
   @IsString()
   sortBy: string;
 

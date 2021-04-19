@@ -4,7 +4,6 @@ export interface ISearchParams {
   trainer?: User;
   fromDate?: Date;
   untilDate?: Date;
-  byTime?: Date;
   sortBy?: string;
   sort?: string;
 }

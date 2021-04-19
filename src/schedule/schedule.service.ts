@@ -38,9 +38,13 @@ export class ScheduleService implements IScheduleService {
   async findAll(options?: ISearchParams): Promise<Schedule[]> {
     const index = Object.keys(options).length;
     if (index) {
-      const tr = options.trainer;
-      if (tr) {
-        options.trainer = await this.usersService.findUser(tr);
+      //const tr = options.trainer;
+      if (options.trainer) {
+        options.trainer = await this.usersService.findUser(options.trainer);
+      }
+      if (options.fromDate && options.untilDate) {
+        options.fromDate = new Date(options.fromDate);
+        options.untilDate = new Date(options.untilDate);
       }
       return await this.scheduleDAO.findByFilters(options);
     }

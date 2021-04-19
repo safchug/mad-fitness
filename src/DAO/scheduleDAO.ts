@@ -12,8 +12,10 @@ import {
   MoreThanOrEqual,
   Like,
   OrderByCondition,
+  FindOperator,
 } from 'typeorm';
 import { ISearchParams } from '../schedule/interface/searchParams.interface';
+import { User } from '../users/interface/users.interface';
 
 export const SCHEDULE_DAO = 'SCHEDULE DAO';
 export interface IScheduleDAO extends IRepository<Schedule> {
@@ -33,37 +35,33 @@ export class ScheduleDAO
     return await scheduleRepository.find({ relations: ['trainer', 'class'] });
   }
 
-  async findByFilters(options: ISearchParams): Promise<Schedule[]> {
-    const scheduleRepository = await this._getRepository(ScheduleEntity);
-    const frDate = options.fromDate;
-    const tilDate = options.untilDate;
-    const train = options.trainer;
-    const time = options.byTime;
-    const srtBy = options.sortBy;
-    const srt = options.sort;
-    const fromDate = new Date(frDate);
-    const untilDate = new Date(tilDate);
-    const searchParams = {
-      trainer: train,
-      startDate: Between(fromDate, untilDate),
-      endDate: Raw(
-        (alias) =>
-          `to_char(timestamp '${time}', 'HH24:MI') BETWEEN to_char(ScheduleEntity.startDate, 'HH24:MI') AND to_char(${alias}, 'HH24:MI')`,
-      ),
-    };
+  private prepareSort(options: ISearchParams): OrderByCondition {
     const orderParams: OrderByCondition = {};
-    if (srt && srtBy) {
-      orderParams[srtBy] = srt === 'ASC' ? 'ASC' : 'DESC';
+    if (options.sort && options.sortBy) {
+      orderParams[options.sortBy] = options.sort === 'ASC' ? 'ASC' : 'DESC';
     }
-    if (!train) {
+    return orderParams;
+  }
+  private prepareFilters(
+    options: ISearchParams,
+  ): { trainer: User; startDate: FindOperator<Date> } {
+    const searchParams = {
+      trainer: options.trainer,
+      startDate: Between(options.fromDate, options.untilDate),
+    };
+    if (!options.trainer) {
       delete searchParams.trainer;
     }
-    if (!frDate || !tilDate) {
+    if (!options.fromDate || !options.untilDate) {
       delete searchParams.startDate;
     }
-    if (!time) {
-      delete searchParams.endDate;
-    }
+    return searchParams;
+  }
+
+  async findByFilters(options: ISearchParams): Promise<Schedule[]> {
+    const scheduleRepository = await this._getRepository(ScheduleEntity);
+    const orderParams: OrderByCondition = this.prepareSort(options);
+    const searchParams = this.prepareFilters(options);
 
     const found: Schedule[] = await scheduleRepository.find({
       relations: ['trainer', 'class'],
