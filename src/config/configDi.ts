@@ -6,6 +6,10 @@ import {
   REFRESH_TOKENS_SERVICE,
 } from '../refreshTokens/refreshTokens.service';
 import { CLASSES_SERVICE, ClassesService } from '../classes/classes.service';
+import {
+  SCHEDULE_SERVICE,
+  ScheduleService,
+} from '../schedule/schedule.service';
 import { RolesDAO, ROLES_DAO } from '../DAO/rolesDAO';
 import { REFRESH_TOKENS_DAO, RefreshTokensDAO } from '../DAO/refreshTokensDAO';
 import { USERS_DAO, UsersDAO } from '../DAO/usersDAO';
@@ -22,6 +26,7 @@ import {
 import { INVITES_SERVICE, InvitesService } from '../invites/invites.service';
 import { INVITES_DAO, InvitesDAO } from '../DAO/invitesDAO';
 import { UserInvitesDAO, USERS_INVITES_DAO } from '../DAO/usersInvitesDAO';
+import { SCHEDULE_DAO, ScheduleDAO } from '../DAO/scheduleDAO';
 
 export const usersService = {
   useClass: UsersService,
@@ -46,6 +51,11 @@ export const refreshTokensService = {
 export const classesService = {
   useClass: ClassesService,
   provide: CLASSES_SERVICE,
+};
+
+export const scheduleService = {
+  useClass: ScheduleService,
+  provide: SCHEDULE_SERVICE,
 };
 
 export const rolesDAO = {
@@ -96,4 +106,9 @@ export const invitesDAO = {
 export const userInvitesDAO = {
   useClass: UserInvitesDAO,
   provide: USERS_INVITES_DAO,
+};
+
+export const scheduleDAO = {
+  useClass: ScheduleDAO,
+  provide: SCHEDULE_DAO,
 };

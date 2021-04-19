@@ -42,7 +42,7 @@ export class ClassesController {
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @ApiResponse({ status: 404, description: 'Such class does not exist.' })
   @Roles('admin', 'trainer')
-  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<Class> {
+  async getClassById(@Param('id', ParseIntPipe) id: number): Promise<Class> {
     return await this.classesService.findById(id);
   }
 
@@ -55,7 +55,7 @@ export class ClassesController {
   })
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @Roles('admin')
-  async create(@Body() clas: CreateClassesDto): Promise<Class> {
+  async createClass(@Body() clas: CreateClassesDto): Promise<Class> {
     return await this.classesService.saveClass(clas);
   }
 
@@ -69,7 +69,7 @@ export class ClassesController {
   @ApiResponse({ status: 404, description: 'Such class does not exist.' })
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @Roles('admin')
-  async registerUser(
+  async updateClass(
     @Body() clas: CreateClassesDto,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Class> {
@@ -86,7 +86,7 @@ export class ClassesController {
   @ApiResponse({ status: 404, description: 'Such class does not exist.' })
   @ApiResponse({ status: 401, description: 'You must log in!' })
   @Roles('admin')
-  async removeUser(@Param('id', ParseIntPipe) id: number): Promise<Class> {
+  async removeClass(@Param('id', ParseIntPipe) id: number): Promise<Class> {
     return await this.classesService.removeClass(id);
   }
 }
