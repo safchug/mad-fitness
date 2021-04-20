@@ -43,9 +43,12 @@ export class UsersInvitesService implements IUsersInvitesService {
 
     await this.createUserInvite({ inviteId: invite.id, userId: user.id });
 
-    const dataInvite = await this.makeInvitePayload(user.email, invite.invite);
+    const invitePayload = await this.makeInvitePayload(
+      user.email,
+      invite.invite,
+    );
 
-    return await this.sendInvite(dataInvite);
+    return await this.sendInvite(invitePayload);
   }
 
   async makeInvitePayload(email: string, invite: string): Promise<SendMail> {
