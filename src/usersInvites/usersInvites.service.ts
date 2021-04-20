@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { UserInvite } from '../mail/interface/user.interface';
+import { UserInvite } from '../mail/interface/userInvite.interface';
 import {
   FITNESS_LOGGER_SERVICE,
   FitnessLoggerService,
@@ -10,12 +10,14 @@ import { USERS_SERVICE, IUsersService } from '../users/users.service';
 import { UserInvites } from './interface/userInvites.interface';
 import { INVITES_SERVICE, IInvitesService } from '../invites/invites.service';
 import { inviteConfig } from '../config/mail/invite/invite.config';
+import { configApp } from '../config/configApp';
+import { SendMail } from '../mail/interface/sendMail.interface';
 
 export const USERS_INVITES_SERVICE = 'USERS INVITES SERVICE';
 
 export interface IUsersInvitesService {
   createAndSendUserInvite(userInvite: UserInvite): Promise<UserInvites>;
-  sendInvite(userInvite: UserInvite, token: string): Promise<UserInvites>;
+  sendInvite(mail: SendMail): Promise<UserInvites>;
   createUserInvite(userInvite: UserInvites): Promise<UserInvites>;
   updateUserInvite(userInvite: UserInvites): Promise<UserInvites>;
 }
@@ -40,14 +42,19 @@ export class UsersInvitesService implements IUsersInvitesService {
 
     await this.createUserInvite({ inviteId: invite.id, userId: user.id });
 
-    return await this.sendInvite(user, invite.invite);
+    const dataInvite: SendMail = {
+      to: user.email,
+      from: inviteConfig.from,
+      subject: inviteConfig.subject,
+      template: inviteConfig.template,
+      url: await this.makeUrl(invite.invite),
+    };
+
+    return await this.sendInvite(dataInvite);
   }
 
-  async sendInvite(
-    userInvite: UserInvite,
-    token: string,
-  ): Promise<UserInvites> {
-    return await this.mailService.sendMail(userInvite, token);
+  async sendInvite(mail: SendMail): Promise<UserInvites> {
+    return await this.mailService.sendMail(mail);
   }
 
   async createUserInvite(userInvite: UserInvites): Promise<UserInvites> {
@@ -92,5 +99,12 @@ export class UsersInvitesService implements IUsersInvitesService {
       throw new HttpException(errorMessage, 500);
     }
     return await this.findById(existingUserInvite.id);
+  }
+
+  async makeUrl(token: string): Promise<string> {
+    const HOST = configApp.appHost;
+    const PORT = configApp.appPort;
+    const PROTOCOL = configApp.appProtocol;
+    return `${PROTOCOL}://${HOST}:${PORT}/auth/confirm?token=${token}`;
   }
 }
