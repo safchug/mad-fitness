@@ -20,6 +20,7 @@ export interface IUsersInvitesService {
   sendInvite(mail: SendMail): Promise<UserInvites>;
   createUserInvite(userInvite: UserInvites): Promise<UserInvites>;
   updateUserInvite(userInvite: UserInvites): Promise<UserInvites>;
+  makeInvitePayload(email: string, invite: string): Promise<SendMail>;
 }
 
 @Injectable()
@@ -42,15 +43,20 @@ export class UsersInvitesService implements IUsersInvitesService {
 
     await this.createUserInvite({ inviteId: invite.id, userId: user.id });
 
-    const dataInvite: SendMail = {
-      to: user.email,
+    const dataInvite = await this.makeInvitePayload(user.email, invite.invite);
+
+    return await this.sendInvite(dataInvite);
+  }
+
+  async makeInvitePayload(email: string, invite: string): Promise<SendMail> {
+    const invitePayload: SendMail = {
+      to: email,
       from: inviteConfig.from,
       subject: inviteConfig.subject,
       template: inviteConfig.template,
-      url: await this.makeUrl(invite.invite),
+      context: await this.makeUrl(invite),
     };
-
-    return await this.sendInvite(dataInvite);
+    return invitePayload;
   }
 
   async sendInvite(mail: SendMail): Promise<UserInvites> {

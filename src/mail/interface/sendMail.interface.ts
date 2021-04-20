@@ -3,5 +3,5 @@ export interface SendMail {
   from: string;
   subject: string;
   template: string;
-  url?: string;
+  context?: string;
 }

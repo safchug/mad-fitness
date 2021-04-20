@@ -18,7 +18,7 @@ export class MailService implements IMailService {
       from: mail.from,
       subject: mail.subject,
       template: mail.template, // `.hbs` extension is appended automatically
-      context: { url: mail.url },
+      context: { url: mail.context },
     });
   }
 }
